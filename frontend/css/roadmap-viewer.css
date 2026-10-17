@@ -1,0 +1,79 @@
+/* ---------- interactive roadmap diagram ---------- */
+.rm-wrap { position: relative; max-width: 1241px; margin: 0 auto; }
+.rm-svg { width: 100%; height: auto; display: block; font-family: system-ui, sans-serif; }
+.rm-edge { stroke: #7a7aff; stroke-width: 2; }
+.rm-edge.dotted { stroke-dasharray: 5 5; }
+.rm-section { fill: #fff3a8; stroke: #e0c200; }
+.rm-text { font-weight: 600; fill: #111; }
+.rm-topic { cursor: pointer; outline: none; }
+.rm-topic .rm-box { fill: #ffe599; stroke: #222; stroke-width: 2; transition: fill .15s; }
+.rm-topic text { font-size: 17px; fill: #111; pointer-events: none; }
+.rm-topic:hover .rm-box, .rm-topic:focus .rm-box { fill: #ffd24d; }
+.rm-topic.selected .rm-box { stroke: #6d28d9; stroke-width: 3; }
+.rm-topic.done .rm-box { fill: #b7f0c1; }
+
+/* hover "mark as completed" button */
+.rm-check { opacity: 0; transition: opacity .15s; cursor: pointer; outline: none; }
+.rm-check circle { fill: #fff; stroke: #16a34a; stroke-width: 2; transition: fill .15s; }
+.rm-check .rm-tick { fill: none; stroke: #16a34a; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.rm-topic:hover .rm-check, .rm-topic:focus .rm-check, .rm-check:focus { opacity: 1; }
+.rm-check:hover circle, .rm-check:focus circle { fill: #dcfce7; }
+.rm-topic.done .rm-check { opacity: 1; }
+.rm-topic.done .rm-check circle { fill: #16a34a; }
+.rm-topic.done .rm-check .rm-tick { stroke: #fff; }
+.rm-check.busy { opacity: .5; pointer-events: none; }
+@media (hover: none) { .rm-check { opacity: .55; } }   /* touch screens have no hover */
+
+body.has-interactive .roadmap-visual { display: none !important; }
+
+/* ---------- resources section below the roadmap ---------- */
+.res-section { margin-top: 2rem; }
+.res-section h2 { font-size: 1.2rem; margin-bottom: .25rem; }
+.res-hint { color: var(--muted, #666); font-size: .9rem; margin: 0 0 1rem; }
+.res-list { display: flex; flex-direction: column; gap: .5rem; }
+.res-card { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; scroll-margin-top: 80px; }
+.res-card.lvl-1 { margin-left: 1.25rem; }
+.res-card.lvl-2 { margin-left: 2.5rem; }
+.res-card.lvl-3 { margin-left: 3.75rem; }
+.res-card > summary { cursor: pointer; padding: .7rem 1rem; font-weight: 600; list-style: none;
+  display: flex; align-items: center; gap: .6rem; }
+.res-card > summary::-webkit-details-marker { display: none; }
+.res-card > summary .chev { transition: transform .15s; color: #64748b; }
+.res-card[open] > summary .chev { transform: rotate(90deg); }
+.res-card .res-state { margin-left: auto; font-size: .75rem; font-weight: 600; color: #15803d;
+  background: #dcfce7; padding: 2px 10px; border-radius: 99px; display: none; }
+.res-card.done .res-state { display: inline-block; }
+.res-card.done { border-color: #86efac; }
+.res-card.flash { animation: res-flash 1.8s ease-out; }
+@keyframes res-flash { 0%, 40% { box-shadow: 0 0 0 3px #6d28d9; } 100% { box-shadow: 0 0 0 0 transparent; } }
+.res-body { padding: 0 1rem 1rem; }
+.res-body .res-desc p { margin: .3rem 0 .8rem; line-height: 1.55; }
+.res-body h3 { font-size: .95rem; margin: .8rem 0 .4rem; }
+.res-links { list-style: none; padding: 0; margin: 0; }
+.res-links li { margin: .4rem 0; display: flex; gap: .6rem; align-items: baseline; }
+.res-badge { flex: none; background: #ede9fe; color: #5b21b6; font-size: .72rem; padding: 2px 8px;
+  border-radius: 99px; text-transform: capitalize; }
+.res-badge.video { background: #fee2e2; color: #b91c1c; }
+.res-badge.search { background: #e0f2fe; color: #0369a1; }
+.res-note { color: #64748b; font-size: .8rem; margin: .5rem 0 0; }
+.res-login { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: #111; color: #fff;
+  padding: .6rem 1rem; border-radius: 8px; z-index: 60; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+.res-login a { color: #93c5fd; }
+/* make text readable on the white resource cards */
+.res-card,
+.res-card > summary,
+.res-body,
+.res-body .res-desc p,
+.res-body h3 {
+  color: #1e293b;          /* dark slate: change this to any color you like */
+}
+
+.res-body h3 { color: #0f172a; }   /* "Free resources" heading */
+
+.res-links a {
+  color: #1d4ed8;          /* link blue */
+  text-decoration: none;
+}
+.res-links a:hover { text-decoration: underline; }
+
+.res-note { color: #64748b; }      /* small grey helper text */

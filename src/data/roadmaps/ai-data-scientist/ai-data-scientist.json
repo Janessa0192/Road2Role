@@ -1,0 +1,1118 @@
+{
+  "schemaVersion": "1.0",
+  "id": "ai-data-scientist",
+  "title": "AI & Data Scientist Roadmap",
+  "description": "A practical, beginner-friendly path from mathematical foundations to machine learning, deep learning, deployment, and a portfolio project.",
+  "canvas": {
+    "width": 1240,
+    "height": 2070,
+    "background": "#F8FAFC"
+  },
+  "layout": {
+    "type": "sectioned-flow",
+    "direction": "top-to-bottom",
+    "nodeWidth": 220,
+    "nodeHeight": 76,
+    "sectionGap": 30
+  },
+  "sections": [
+    {
+      "id": "foundations",
+      "title": "1. Mathematics & Statistics",
+      "x": 40,
+      "y": 80,
+      "width": 1160,
+      "height": 300,
+      "color": "#EDE9FE"
+    },
+    {
+      "id": "programming",
+      "title": "2. Programming & Data Handling",
+      "x": 40,
+      "y": 410,
+      "width": 1160,
+      "height": 300,
+      "color": "#DBEAFE"
+    },
+    {
+      "id": "analysis",
+      "title": "3. Data Analysis & Experimentation",
+      "x": 40,
+      "y": 740,
+      "width": 1160,
+      "height": 300,
+      "color": "#D1FAE5"
+    },
+    {
+      "id": "machine-learning",
+      "title": "4. Machine Learning",
+      "x": 40,
+      "y": 1070,
+      "width": 1160,
+      "height": 300,
+      "color": "#FEF3C7"
+    },
+    {
+      "id": "deep-learning",
+      "title": "5. Deep Learning & Specializations",
+      "x": 40,
+      "y": 1400,
+      "width": 1160,
+      "height": 300,
+      "color": "#FCE7F3"
+    },
+    {
+      "id": "deployment",
+      "title": "6. Deployment & Portfolio",
+      "x": 40,
+      "y": 1730,
+      "width": 1160,
+      "height": 300,
+      "color": "#E0F2FE"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "linear-algebra",
+      "title": "Linear Algebra",
+      "section": "foundations",
+      "x": 70,
+      "y": 155,
+      "width": 220,
+      "height": 76,
+      "description": "Learn vectors, matrices, matrix multiplication, dot products, and eigen concepts at an intuitive level.",
+      "whyItMatters": "Many ML models represent datasets and transformations with vectors and matrices.",
+      "subtopics": [
+        "Vectors and matrices",
+        "Dot product and matrix multiplication",
+        "Norms and distance",
+        "Eigenvalues/eigenvectors (intro)"
+      ],
+      "prerequisites": [],
+      "resources": [
+        {
+          "title": "Khan Academy: Linear Algebra",
+          "url": "https://www.khanacademy.org/math/linear-algebra",
+          "type": "free course"
+        },
+        {
+          "title": "Mathematics for Machine Learning",
+          "url": "https://mml-book.github.io/",
+          "type": "free book"
+        }
+      ],
+      "practice": "Implement vector operations and matrix multiplication with NumPy.",
+      "estimatedHours": 10,
+      "level": "beginner"
+    },
+    {
+      "id": "calculus",
+      "title": "Calculus & Gradients",
+      "section": "foundations",
+      "x": 330,
+      "y": 155,
+      "width": 220,
+      "height": 76,
+      "description": "Understand functions, derivatives, partial derivatives, and gradients, focusing on how model parameters change.",
+      "whyItMatters": "Gradient-based optimization uses derivatives to improve model predictions.",
+      "subtopics": [
+        "Functions and limits",
+        "Derivatives and chain rule",
+        "Partial derivatives",
+        "Gradient intuition"
+      ],
+      "prerequisites": [
+        "linear-algebra"
+      ],
+      "resources": [
+        {
+          "title": "3Blue1Brown: Essence of Calculus",
+          "url": "https://www.3blue1brown.com/topics/calculus",
+          "type": "video series"
+        },
+        {
+          "title": "Khan Academy: Differential Calculus",
+          "url": "https://www.khanacademy.org/math/differential-calculus",
+          "type": "free course"
+        }
+      ],
+      "practice": "Plot a function and its derivative; calculate a simple gradient by hand.",
+      "estimatedHours": 8,
+      "level": "beginner"
+    },
+    {
+      "id": "probability",
+      "title": "Probability",
+      "section": "foundations",
+      "x": 590,
+      "y": 155,
+      "width": 220,
+      "height": 76,
+      "description": "Learn how to reason about uncertainty, events, conditional probability, random variables, and common distributions.",
+      "whyItMatters": "Predictions and statistical learning rely on uncertainty and probability.",
+      "subtopics": [
+        "Conditional probability and Bayes' rule",
+        "Random variables",
+        "Expectation and variance",
+        "Normal and Bernoulli distributions"
+      ],
+      "prerequisites": [],
+      "resources": [
+        {
+          "title": "Khan Academy: Statistics and Probability",
+          "url": "https://www.khanacademy.org/math/statistics-probability",
+          "type": "free course"
+        },
+        {
+          "title": "OpenIntro Statistics",
+          "url": "https://www.openintro.org/book/os/",
+          "type": "free textbook"
+        }
+      ],
+      "practice": "Simulate coin flips and dice rolls in Python and compare results with theory.",
+      "estimatedHours": 8,
+      "level": "beginner"
+    },
+    {
+      "id": "statistics",
+      "title": "Statistics & Hypothesis Testing",
+      "section": "foundations",
+      "x": 850,
+      "y": 155,
+      "width": 220,
+      "height": 76,
+      "description": "Learn descriptive statistics, sampling, confidence intervals, hypothesis tests, and p-values.",
+      "whyItMatters": "Statistics helps distinguish reliable patterns from random variation.",
+      "subtopics": [
+        "Mean, median, variance, standard deviation",
+        "Sampling and confidence intervals",
+        "Null and alternative hypotheses",
+        "p-values and effect sizes"
+      ],
+      "prerequisites": [
+        "probability"
+      ],
+      "resources": [
+        {
+          "title": "OpenIntro Statistics",
+          "url": "https://www.openintro.org/book/os/",
+          "type": "free textbook"
+        },
+        {
+          "title": "Seeing Theory",
+          "url": "https://seeing-theory.brown.edu/",
+          "type": "interactive lessons"
+        }
+      ],
+      "practice": "Run a small A/B test analysis and explain the result in plain language.",
+      "estimatedHours": 10,
+      "level": "beginner"
+    },
+    {
+      "id": "python",
+      "title": "Python Programming",
+      "section": "programming",
+      "x": 70,
+      "y": 485,
+      "width": 220,
+      "height": 76,
+      "description": "Build a practical Python foundation: variables, collections, control flow, functions, modules, files, and exceptions.",
+      "whyItMatters": "Python is widely used across data analysis, machine learning, and model deployment.",
+      "subtopics": [
+        "Core syntax and data types",
+        "Conditions and loops",
+        "Functions and modules",
+        "Files, exceptions, virtual environments"
+      ],
+      "prerequisites": [],
+      "resources": [
+        {
+          "title": "Google's Python Class",
+          "url": "https://developers.google.com/edu/python",
+          "type": "free course"
+        },
+        {
+          "title": "Python Tutorial",
+          "url": "https://docs.python.org/3/tutorial/",
+          "type": "official docs"
+        }
+      ],
+      "practice": "Write small scripts for parsing files, cleaning strings, and summarizing lists.",
+      "estimatedHours": 12,
+      "level": "beginner"
+    },
+    {
+      "id": "sql",
+      "title": "SQL & Databases",
+      "section": "programming",
+      "x": 330,
+      "y": 485,
+      "width": 220,
+      "height": 76,
+      "description": "Query relational data using SELECT, filtering, joins, grouping, subqueries, and common table expressions.",
+      "whyItMatters": "Real-world data is often stored in databases, so analysts and data scientists need to retrieve it efficiently.",
+      "subtopics": [
+        "SELECT, WHERE, ORDER BY",
+        "GROUP BY and aggregate functions",
+        "INNER and OUTER JOIN",
+        "Subqueries and CTEs"
+      ],
+      "prerequisites": [],
+      "resources": [
+        {
+          "title": "SQLBolt",
+          "url": "https://sqlbolt.com/",
+          "type": "interactive lessons"
+        },
+        {
+          "title": "PostgreSQL Tutorial",
+          "url": "https://www.postgresql.org/docs/current/tutorial.html",
+          "type": "official docs"
+        }
+      ],
+      "practice": "Use a sample dataset to answer 10 business questions with SQL.",
+      "estimatedHours": 8,
+      "level": "beginner"
+    },
+    {
+      "id": "numpy-pandas",
+      "title": "NumPy & Pandas",
+      "section": "programming",
+      "x": 590,
+      "y": 485,
+      "width": 220,
+      "height": 76,
+      "description": "Work with arrays and tabular datasets, including selecting rows, cleaning missing values, grouping, merging, and reshaping.",
+      "whyItMatters": "These tools are the foundation of most Python data workflows.",
+      "subtopics": [
+        "NumPy arrays and vectorization",
+        "DataFrames and Series",
+        "Missing and duplicate values",
+        "Groupby, merge, pivot"
+      ],
+      "prerequisites": [
+        "python"
+      ],
+      "resources": [
+        {
+          "title": "Pandas Getting Started",
+          "url": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/",
+          "type": "official tutorials"
+        },
+        {
+          "title": "NumPy Learn",
+          "url": "https://numpy.org/learn/",
+          "type": "official resources"
+        }
+      ],
+      "practice": "Clean a messy CSV and create a short data-quality report.",
+      "estimatedHours": 12,
+      "level": "beginner"
+    },
+    {
+      "id": "visualization",
+      "title": "Data Visualization",
+      "section": "programming",
+      "x": 850,
+      "y": 485,
+      "width": 220,
+      "height": 76,
+      "description": "Turn data into understandable charts and communicate comparisons, distributions, trends, and relationships.",
+      "whyItMatters": "Good visualization helps uncover patterns and makes findings understandable to others.",
+      "subtopics": [
+        "Matplotlib and Seaborn",
+        "Choosing appropriate chart types",
+        "Labels, scales, and misleading charts",
+        "Communicating findings"
+      ],
+      "prerequisites": [
+        "numpy-pandas"
+      ],
+      "resources": [
+        {
+          "title": "Seaborn Tutorial",
+          "url": "https://seaborn.pydata.org/tutorial.html",
+          "type": "official tutorial"
+        },
+        {
+          "title": "Kaggle Learn: Data Visualization",
+          "url": "https://www.kaggle.com/learn/data-visualization",
+          "type": "free course"
+        }
+      ],
+      "practice": "Create five clear charts and write one insight for each.",
+      "estimatedHours": 8,
+      "level": "beginner"
+    },
+    {
+      "id": "eda",
+      "title": "Exploratory Data Analysis",
+      "section": "analysis",
+      "x": 70,
+      "y": 815,
+      "width": 220,
+      "height": 76,
+      "description": "Inspect a dataset, understand its shape and quality, explore distributions, and develop useful questions before modeling.",
+      "whyItMatters": "EDA reveals data issues and helps choose sensible features and evaluation strategies.",
+      "subtopics": [
+        "Data types and data dictionary",
+        "Missing values and outliers",
+        "Univariate and bivariate analysis",
+        "Correlation versus causation"
+      ],
+      "prerequisites": [
+        "numpy-pandas",
+        "visualization"
+      ],
+      "resources": [
+        {
+          "title": "Kaggle Learn: Pandas",
+          "url": "https://www.kaggle.com/learn/pandas",
+          "type": "free course"
+        },
+        {
+          "title": "An Introduction to Statistical Learning",
+          "url": "https://www.statlearning.com/",
+          "type": "free book"
+        }
+      ],
+      "practice": "Publish an EDA notebook with data-quality notes and three evidence-backed findings.",
+      "estimatedHours": 10,
+      "level": "beginner"
+    },
+    {
+      "id": "experimentation",
+      "title": "A/B Testing & Experiment Design",
+      "section": "analysis",
+      "x": 330,
+      "y": 815,
+      "width": 220,
+      "height": 76,
+      "description": "Learn to define a hypothesis, choose metrics, estimate sample needs, and interpret experiment results responsibly.",
+      "whyItMatters": "Data scientists often evaluate product changes and interventions using experiments.",
+      "subtopics": [
+        "Primary and guardrail metrics",
+        "Randomization and bias",
+        "Statistical significance and practical impact",
+        "Power and sample-size intuition"
+      ],
+      "prerequisites": [
+        "statistics"
+      ],
+      "resources": [
+        {
+          "title": "Evan Miller: A/B Testing Tools",
+          "url": "https://www.evanmiller.org/ab-testing/",
+          "type": "free tools and explanations"
+        },
+        {
+          "title": "OpenIntro Statistics",
+          "url": "https://www.openintro.org/book/os/",
+          "type": "free textbook"
+        }
+      ],
+      "practice": "Draft an experiment plan with hypothesis, metric, risks, and decision rule.",
+      "estimatedHours": 8,
+      "level": "beginner"
+    },
+    {
+      "id": "econometrics",
+      "title": "Econometrics & Causal Thinking",
+      "section": "analysis",
+      "x": 590,
+      "y": 815,
+      "width": 220,
+      "height": 76,
+      "description": "Understand regression assumptions, confounding, observational data, and the difference between association and causation.",
+      "whyItMatters": "Helps avoid making causal claims from patterns that may be explained by other variables.",
+      "subtopics": [
+        "Simple and multiple regression",
+        "Confounding and omitted variables",
+        "Selection bias",
+        "Intro to causal diagrams"
+      ],
+      "prerequisites": [
+        "statistics"
+      ],
+      "resources": [
+        {
+          "title": "Econometrics with R",
+          "url": "https://www.econometrics-with-r.org/",
+          "type": "free online book"
+        },
+        {
+          "title": "The Effect: An Introduction to Research Design and Causality",
+          "url": "https://theeffectbook.net/",
+          "type": "free online book"
+        }
+      ],
+      "practice": "Write a short analysis explaining why correlation alone does not prove causation.",
+      "estimatedHours": 8,
+      "level": "intermediate"
+    },
+    {
+      "id": "feature-engineering",
+      "title": "Feature Engineering",
+      "section": "analysis",
+      "x": 850,
+      "y": 815,
+      "width": 220,
+      "height": 76,
+      "description": "Prepare useful model inputs by transforming variables, encoding categories, scaling values, and preventing data leakage.",
+      "whyItMatters": "Model quality depends heavily on how raw data is represented and how preprocessing is validated.",
+      "subtopics": [
+        "Categorical encoding",
+        "Scaling and transformations",
+        "Date/text features",
+        "Train-test leakage"
+      ],
+      "prerequisites": [
+        "eda"
+      ],
+      "resources": [
+        {
+          "title": "Scikit-learn: Preprocessing",
+          "url": "https://scikit-learn.org/stable/modules/preprocessing.html",
+          "type": "official docs"
+        },
+        {
+          "title": "Made With ML: Data",
+          "url": "https://madewithml.com/",
+          "type": "free course"
+        }
+      ],
+      "practice": "Build a preprocessing pipeline and verify it is fit only on training data.",
+      "estimatedHours": 8,
+      "level": "intermediate"
+    },
+    {
+      "id": "ml-basics",
+      "title": "ML Foundations & Evaluation",
+      "section": "machine-learning",
+      "x": 70,
+      "y": 1145,
+      "width": 220,
+      "height": 76,
+      "description": "Understand supervised versus unsupervised learning, train/validation/test splits, baselines, and generalization.",
+      "whyItMatters": "These concepts provide the framework for selecting and evaluating models fairly.",
+      "subtopics": [
+        "Problem framing",
+        "Train/validation/test split",
+        "Cross-validation",
+        "Overfitting and underfitting",
+        "Metrics and baselines"
+      ],
+      "prerequisites": [
+        "eda",
+        "statistics"
+      ],
+      "resources": [
+        {
+          "title": "An Introduction to Statistical Learning",
+          "url": "https://www.statlearning.com/",
+          "type": "free book"
+        },
+        {
+          "title": "Scikit-learn: Model Evaluation",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+          "type": "official docs"
+        }
+      ],
+      "practice": "Create a baseline model and explain why your chosen metric fits the problem.",
+      "estimatedHours": 12,
+      "level": "beginner"
+    },
+    {
+      "id": "regression",
+      "title": "Regression Models",
+      "section": "machine-learning",
+      "x": 330,
+      "y": 1145,
+      "width": 220,
+      "height": 76,
+      "description": "Predict numeric values with linear regression, regularization, and tree-based regression models.",
+      "whyItMatters": "Regression is a core tool for forecasting continuous outcomes and establishing interpretable baselines.",
+      "subtopics": [
+        "Linear and polynomial regression",
+        "Ridge and Lasso",
+        "Decision trees and random forests",
+        "Residual analysis"
+      ],
+      "prerequisites": [
+        "ml-basics"
+      ],
+      "resources": [
+        {
+          "title": "ISLR: Regression Chapters",
+          "url": "https://www.statlearning.com/",
+          "type": "free book"
+        },
+        {
+          "title": "Scikit-learn: Supervised Learning",
+          "url": "https://scikit-learn.org/stable/supervised_learning.html",
+          "type": "official docs"
+        }
+      ],
+      "practice": "Compare a linear model and a tree-based model on one regression dataset.",
+      "estimatedHours": 10,
+      "level": "intermediate"
+    },
+    {
+      "id": "classification",
+      "title": "Classification Models",
+      "section": "machine-learning",
+      "x": 590,
+      "y": 1145,
+      "width": 220,
+      "height": 76,
+      "description": "Predict categories and evaluate models using metrics suited to class balance and the cost of mistakes.",
+      "whyItMatters": "Classification is used in tasks such as fraud detection, churn prediction, and risk screening.",
+      "subtopics": [
+        "Logistic regression",
+        "Decision trees and ensembles",
+        "Precision, recall, F1, ROC-AUC",
+        "Class imbalance and calibration"
+      ],
+      "prerequisites": [
+        "ml-basics"
+      ],
+      "resources": [
+        {
+          "title": "Scikit-learn: Classification",
+          "url": "https://scikit-learn.org/stable/supervised_learning.html",
+          "type": "official docs"
+        },
+        {
+          "title": "Google ML Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course",
+          "type": "free course"
+        }
+      ],
+      "practice": "Compare precision and recall for a deliberately imbalanced dataset.",
+      "estimatedHours": 10,
+      "level": "intermediate"
+    },
+    {
+      "id": "unsupervised",
+      "title": "Clustering & Dimensionality Reduction",
+      "section": "machine-learning",
+      "x": 850,
+      "y": 1145,
+      "width": 220,
+      "height": 76,
+      "description": "Explore unlabeled data using clustering and techniques that simplify high-dimensional representations.",
+      "whyItMatters": "Useful for segmentation, exploratory analysis, compression, and understanding structure in data.",
+      "subtopics": [
+        "K-means and hierarchical clustering",
+        "DBSCAN intuition",
+        "PCA",
+        "Cluster validation and caveats"
+      ],
+      "prerequisites": [
+        "ml-basics"
+      ],
+      "resources": [
+        {
+          "title": "Scikit-learn: Clustering",
+          "url": "https://scikit-learn.org/stable/modules/clustering.html",
+          "type": "official docs"
+        },
+        {
+          "title": "StatQuest",
+          "url": "https://statquest.org/",
+          "type": "free video lessons"
+        }
+      ],
+      "practice": "Cluster a dataset, visualize the groups, and discuss the limitations of the result.",
+      "estimatedHours": 10,
+      "level": "intermediate"
+    },
+    {
+      "id": "model-selection",
+      "title": "Model Selection & Explainability",
+      "section": "machine-learning",
+      "x": 70,
+      "y": 1245,
+      "width": 220,
+      "height": 76,
+      "description": "Compare candidate models, tune hyperparameters, inspect feature importance, and communicate limitations.",
+      "whyItMatters": "Reliable model selection balances performance, complexity, reproducibility, and interpretability.",
+      "subtopics": [
+        "Grid/random search",
+        "Pipelines and cross-validation",
+        "Permutation importance",
+        "Error analysis and model cards"
+      ],
+      "prerequisites": [
+        "regression",
+        "classification"
+      ],
+      "resources": [
+        {
+          "title": "Scikit-learn: Model Selection",
+          "url": "https://scikit-learn.org/stable/model_selection.html",
+          "type": "official docs"
+        },
+        {
+          "title": "Interpretable Machine Learning",
+          "url": "https://christophm.github.io/interpretable-ml-book/",
+          "type": "free book"
+        }
+      ],
+      "practice": "Document a model comparison table and investigate its largest errors.",
+      "estimatedHours": 10,
+      "level": "intermediate"
+    },
+    {
+      "id": "neural-networks",
+      "title": "Neural Network Basics",
+      "section": "deep-learning",
+      "x": 70,
+      "y": 1475,
+      "width": 220,
+      "height": 76,
+      "description": "Learn neurons, layers, activations, loss functions, backpropagation, optimizers, and training loops.",
+      "whyItMatters": "Neural networks form the basis for deep learning systems used in vision, language, and other complex tasks.",
+      "subtopics": [
+        "Perceptrons and multilayer networks",
+        "Activation and loss functions",
+        "Backpropagation intuition",
+        "Gradient descent and regularization"
+      ],
+      "prerequisites": [
+        "calculus",
+        "linear-algebra",
+        "ml-basics"
+      ],
+      "resources": [
+        {
+          "title": "Dive into Deep Learning",
+          "url": "https://d2l.ai/",
+          "type": "free interactive book"
+        },
+        {
+          "title": "PyTorch Tutorials",
+          "url": "https://pytorch.org/tutorials/",
+          "type": "official tutorials"
+        }
+      ],
+      "practice": "Train a small neural network and plot training versus validation loss.",
+      "estimatedHours": 12,
+      "level": "intermediate"
+    },
+    {
+      "id": "deep-learning",
+      "title": "Deep Learning Practice",
+      "section": "deep-learning",
+      "x": 330,
+      "y": 1475,
+      "width": 220,
+      "height": 76,
+      "description": "Build, train, and debug neural networks using a framework such as PyTorch.",
+      "whyItMatters": "Practical training experience teaches batching, optimization, overfitting control, and reproducibility.",
+      "subtopics": [
+        "Tensors and autograd",
+        "Datasets and DataLoaders",
+        "Optimizers and schedulers",
+        "Checkpointing and reproducibility"
+      ],
+      "prerequisites": [
+        "neural-networks"
+      ],
+      "resources": [
+        {
+          "title": "PyTorch Tutorials",
+          "url": "https://pytorch.org/tutorials/",
+          "type": "official tutorials"
+        },
+        {
+          "title": "Deep Learning Book",
+          "url": "https://www.deeplearningbook.org/",
+          "type": "free book"
+        }
+      ],
+      "practice": "Train a model with a validation loop and save the best checkpoint.",
+      "estimatedHours": 12,
+      "level": "intermediate"
+    },
+    {
+      "id": "nlp-transformers",
+      "title": "NLP & Transformers",
+      "section": "deep-learning",
+      "x": 590,
+      "y": 1475,
+      "width": 220,
+      "height": 76,
+      "description": "Learn text preprocessing, embeddings, attention, transformer blocks, and how to use pretrained language models.",
+      "whyItMatters": "Transformers underpin many modern language and multimodal systems.",
+      "subtopics": [
+        "Tokenization and embeddings",
+        "Attention mechanism",
+        "Transformer encoder/decoder intuition",
+        "Using pretrained models responsibly"
+      ],
+      "prerequisites": [
+        "deep-learning"
+      ],
+      "resources": [
+        {
+          "title": "The Illustrated Transformer",
+          "url": "https://jalammar.github.io/illustrated-transformer/",
+          "type": "free explainer"
+        },
+        {
+          "title": "Hugging Face Course",
+          "url": "https://huggingface.co/learn",
+          "type": "free course"
+        }
+      ],
+      "practice": "Build a text-classification demo with a pretrained model and document its limitations.",
+      "estimatedHours": 12,
+      "level": "advanced"
+    },
+    {
+      "id": "specialization",
+      "title": "Choose a Specialization",
+      "section": "deep-learning",
+      "x": 850,
+      "y": 1475,
+      "width": 220,
+      "height": 76,
+      "description": "Choose a focused direction—such as computer vision, NLP, recommender systems, time series, or generative AI—and study it in depth.",
+      "whyItMatters": "A focused project demonstrates that you can apply general ML foundations to a specific problem domain.",
+      "subtopics": [
+        "Choose a domain and real problem",
+        "Study relevant model families",
+        "Select appropriate metrics",
+        "Review fairness, privacy, and failure modes"
+      ],
+      "prerequisites": [
+        "deep-learning"
+      ],
+      "resources": [
+        {
+          "title": "Kaggle Learn",
+          "url": "https://www.kaggle.com/learn",
+          "type": "free courses"
+        },
+        {
+          "title": "Papers with Code",
+          "url": "https://paperswithcode.com/",
+          "type": "research and benchmarks"
+        }
+      ],
+      "practice": "Complete one small end-to-end project in your chosen specialization.",
+      "estimatedHours": 16,
+      "level": "advanced"
+    },
+    {
+      "id": "deployment",
+      "title": "Model Deployment & APIs",
+      "section": "deployment",
+      "x": 70,
+      "y": 1805,
+      "width": 220,
+      "height": 76,
+      "description": "Package a trained model behind a simple API and make predictions reproducible outside a notebook.",
+      "whyItMatters": "Models only create practical value when others can use them safely and reliably.",
+      "subtopics": [
+        "Save/load model artifacts",
+        "FastAPI basics",
+        "Input validation and error handling",
+        "Environment and dependency management"
+      ],
+      "prerequisites": [
+        "model-selection"
+      ],
+      "resources": [
+        {
+          "title": "FastAPI Tutorial",
+          "url": "https://fastapi.tiangolo.com/tutorial/",
+          "type": "official docs"
+        },
+        {
+          "title": "Made With ML: Deployment",
+          "url": "https://madewithml.com/",
+          "type": "free course"
+        }
+      ],
+      "practice": "Expose a model through an API and test valid and invalid inputs.",
+      "estimatedHours": 10,
+      "level": "intermediate"
+    },
+    {
+      "id": "mlops",
+      "title": "MLOps & Monitoring",
+      "section": "deployment",
+      "x": 330,
+      "y": 1805,
+      "width": 220,
+      "height": 76,
+      "description": "Learn the basics of experiment tracking, data/model versioning, monitoring, and detecting model or data drift.",
+      "whyItMatters": "Models can degrade after deployment as real-world data and user behavior change.",
+      "subtopics": [
+        "Experiment tracking",
+        "Data and model versioning",
+        "Monitoring and drift",
+        "Retraining and rollback plans"
+      ],
+      "prerequisites": [
+        "deployment"
+      ],
+      "resources": [
+        {
+          "title": "MLflow Documentation",
+          "url": "https://mlflow.org/docs/latest/",
+          "type": "official docs"
+        },
+        {
+          "title": "Full Stack Deep Learning",
+          "url": "https://fullstackdeeplearning.com/",
+          "type": "free course"
+        }
+      ],
+      "practice": "Track experiments and write a lightweight monitoring and rollback plan.",
+      "estimatedHours": 10,
+      "level": "advanced"
+    },
+    {
+      "id": "portfolio",
+      "title": "Portfolio Project",
+      "section": "deployment",
+      "x": 590,
+      "y": 1805,
+      "width": 220,
+      "height": 76,
+      "description": "Build a complete project from problem framing and data exploration through evaluation, documentation, and a usable demo.",
+      "whyItMatters": "A clear end-to-end project shows both technical ability and thoughtful communication.",
+      "subtopics": [
+        "Define the user problem",
+        "Document data provenance",
+        "Build reproducible pipeline",
+        "Evaluate and explain trade-offs",
+        "README and demo"
+      ],
+      "prerequisites": [
+        "model-selection",
+        "deployment"
+      ],
+      "resources": [
+        {
+          "title": "Kaggle",
+          "url": "https://www.kaggle.com/",
+          "type": "datasets and competitions"
+        },
+        {
+          "title": "GitHub Skills",
+          "url": "https://skills.github.com/",
+          "type": "free learning modules"
+        }
+      ],
+      "practice": "Publish a repository with setup instructions, evaluation results, limitations, and a demo.",
+      "estimatedHours": 20,
+      "level": "intermediate"
+    },
+    {
+      "id": "interview",
+      "title": "Review & Interview Readiness",
+      "section": "deployment",
+      "x": 850,
+      "y": 1805,
+      "width": 220,
+      "height": 76,
+      "description": "Consolidate core concepts and practice explaining decisions, debugging workflows, and discussing project trade-offs.",
+      "whyItMatters": "Clear reasoning and communication matter alongside model-building skills.",
+      "subtopics": [
+        "Statistics and ML fundamentals",
+        "SQL and Python practice",
+        "Metric and model trade-offs",
+        "Project walkthrough",
+        "Responsible AI and limitations"
+      ],
+      "prerequisites": [
+        "portfolio"
+      ],
+      "resources": [
+        {
+          "title": "Scikit-learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html",
+          "type": "official docs"
+        },
+        {
+          "title": "LeetCode",
+          "url": "https://leetcode.com/",
+          "type": "practice platform"
+        }
+      ],
+      "practice": "Prepare a concise walkthrough of your project and answer why you made each major decision.",
+      "estimatedHours": 10,
+      "level": "intermediate"
+    }
+  ],
+  "edges": [
+    {
+      "from": "linear-algebra",
+      "to": "calculus",
+      "type": "solid"
+    },
+    {
+      "from": "calculus",
+      "to": "neural-networks",
+      "type": "dotted"
+    },
+    {
+      "from": "probability",
+      "to": "statistics",
+      "type": "solid"
+    },
+    {
+      "from": "statistics",
+      "to": "experimentation",
+      "type": "solid"
+    },
+    {
+      "from": "python",
+      "to": "numpy-pandas",
+      "type": "solid"
+    },
+    {
+      "from": "numpy-pandas",
+      "to": "visualization",
+      "type": "solid"
+    },
+    {
+      "from": "numpy-pandas",
+      "to": "eda",
+      "type": "solid"
+    },
+    {
+      "from": "visualization",
+      "to": "eda",
+      "type": "solid"
+    },
+    {
+      "from": "sql",
+      "to": "eda",
+      "type": "dotted"
+    },
+    {
+      "from": "statistics",
+      "to": "econometrics",
+      "type": "solid"
+    },
+    {
+      "from": "eda",
+      "to": "feature-engineering",
+      "type": "solid"
+    },
+    {
+      "from": "eda",
+      "to": "ml-basics",
+      "type": "solid"
+    },
+    {
+      "from": "statistics",
+      "to": "ml-basics",
+      "type": "solid"
+    },
+    {
+      "from": "ml-basics",
+      "to": "regression",
+      "type": "solid"
+    },
+    {
+      "from": "ml-basics",
+      "to": "classification",
+      "type": "solid"
+    },
+    {
+      "from": "ml-basics",
+      "to": "unsupervised",
+      "type": "solid"
+    },
+    {
+      "from": "regression",
+      "to": "model-selection",
+      "type": "solid"
+    },
+    {
+      "from": "classification",
+      "to": "model-selection",
+      "type": "solid"
+    },
+    {
+      "from": "unsupervised",
+      "to": "model-selection",
+      "type": "solid"
+    },
+    {
+      "from": "feature-engineering",
+      "to": "model-selection",
+      "type": "solid"
+    },
+    {
+      "from": "linear-algebra",
+      "to": "neural-networks",
+      "type": "dotted"
+    },
+    {
+      "from": "model-selection",
+      "to": "neural-networks",
+      "type": "dotted"
+    },
+    {
+      "from": "neural-networks",
+      "to": "deep-learning",
+      "type": "solid"
+    },
+    {
+      "from": "deep-learning",
+      "to": "nlp-transformers",
+      "type": "solid"
+    },
+    {
+      "from": "deep-learning",
+      "to": "specialization",
+      "type": "solid"
+    },
+    {
+      "from": "model-selection",
+      "to": "deployment",
+      "type": "solid"
+    },
+    {
+      "from": "deployment",
+      "to": "mlops",
+      "type": "solid"
+    },
+    {
+      "from": "deployment",
+      "to": "portfolio",
+      "type": "solid"
+    },
+    {
+      "from": "mlops",
+      "to": "portfolio",
+      "type": "solid"
+    },
+    {
+      "from": "portfolio",
+      "to": "interview",
+      "type": "solid"
+    }
+  ],
+  "legend": [
+    {
+      "type": "solid",
+      "label": "Recommended learning path"
+    },
+    {
+      "type": "dotted",
+      "label": "Helpful prerequisite or optional connection"
+    }
+  ],
+  "notes": [
+    "This is a proposed clean roadmap data format, not guaranteed to match the current roadmap-viewer.js contract.",
+    "If your renderer expects a different JSON schema, adapt the loader/renderer to these fields before replacing the existing roadmap JSON."
+  ]
+}
