@@ -12,7 +12,7 @@ const DOCS_HTML = `<!doctype html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>roadmap.sh API docs</title>
+  <title>Road2Role API docs</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css" />
   <style>body { margin: 0; background: #fafafa; }</style>
 </head>
@@ -76,7 +76,7 @@ export function createApp() {
   /* ------------------------------------------------- OpenAPI + docs ---- */
   app.get('/api', (_req, res) => {
     res.json({
-      name: 'roadmap.sh API',
+      name: 'Road2Role API',
       version: config.apiVersion,
       documentation: '/api/docs',
       openapi: '/api/openapi.json',

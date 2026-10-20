@@ -21,7 +21,7 @@ function fail(message) {
 }
 
 function renderHeader(r) {
-  document.title = `${r.title} - roadmaps.sh`;
+  document.title = `${r.title} - Road2Role`;
   $('[data-title]').textContent = r.title;
   $('[data-badges]').innerHTML = `
     <span class="badge ${escapeHtml(r.category)}">${escapeHtml(r.category)}</span>

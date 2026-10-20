@@ -6,10 +6,10 @@
 export const openApiSpec = {
   openapi: '3.1.0',
   info: {
-    title: 'roadmap.sh API',
+    title: 'Road2Role API',
     version: '1.0.0',
     description: [
-      'RESTful API for the rebuilt roadmap.sh frontend.',
+      'RESTful API for the Road2Role frontend.',
       '',
       '**Design conventions**',
       '- Resource oriented URLs under a URI version prefix `/api/v1`',

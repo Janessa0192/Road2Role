@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Roadmaps - Step by step guides to become a developer</title>
-  <meta name="description" content="Community driven developer roadmaps: frontend, backend, DevOps, data, AI and more." />
+  <title>Road2Role - Your Roadmap to Dream Role</title>
+  <meta name="description" content="Road2Role: explore career roadmaps, learn step by step, track your progress and get job-ready." />
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
@@ -12,13 +12,14 @@
 
   <header class="site-header">
     <div class="container">
-      <a class="brand" href="/index.html">
-        <span class="logo" aria-hidden="true">R</span>
-        <span>roadmaps<span class="accent">.</span>sh</span>
+      <a class="brand" href="/index.html" aria-label="Road2Role home">
+        <svg class="brand-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 7 3 14.5 20 22l17-7.5L20 7Z" fill="currentColor"/><path d="M10 19v7c0 2.6 4.5 5 10 5s10-2.4 10-5v-7l-10 4.4L10 19Z" fill="currentColor" opacity=".75"/><path d="M36 15.5V26" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <span class="brand-text">Road2Role</span>
       </a>
       <nav class="site-nav" aria-label="Main">
-        <a class="nav-link" href="/index.html">Roadmaps</a>
-        <a class="nav-link" href="/api/docs">API docs</a>
+        <a class="nav-link" href="/index.html">Home</a>
+        <a class="nav-link" href="/index.html#roadmaps">Roadmaps</a>
+        
         <span data-auth-area></span>
       </nav>
     </div>
@@ -26,15 +27,63 @@
 
   <main id="main" class="container">
     <section class="hero" aria-labelledby="hero-title">
-      <h1 id="hero-title">Step by step guides to become a <span class="accent">developer</span></h1>
-      <p>
-        Community driven roadmaps for frontend, backend, DevOps, data and AI roles.
-        Pick a path, track your progress and learn in public.
-      </p>
+      <div class="hero-copy">
+        <span class="eyebrow">🚀 Learn · Build · Get Hired</span>
+        <h1 id="hero-title">Your Roadmap<br />to <span class="accent">Dream Role</span></h1>
+        <p>
+          Explore career roadmaps, learn in a structured way and track your progress
+          step by step — all in one place.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="#roadmaps">Explore Roadmaps →</a>
+          <a class="btn btn-lg" href="/register.html">Create free account</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="mock-card">
+          <div class="mock-head">
+            <span>Road2Role</span>
+            <span class="mock-bars"><i style="height:9px"></i><i style="height:14px"></i><i style="height:22px"></i></span>
+          </div>
+          <ul class="mock-steps">
+            <li class="done">Choose a Roadmap</li>
+            <li class="done">Learn Step by Step</li>
+            <li>Track Your Progress</li>
+            <li>Build Projects</li>
+            <li>Get Job Ready</li>
+          </ul>
+          <div class="mock-progress">
+            <div class="progress-track"><div class="progress-fill" style="width: 40%"></div></div>
+            <small>40% complete</small>
+          </div>
+        </div>
+        <div class="sticky s1">Plan<br />Learn<br />Practice<br />Grow</div>
+        <div class="sticky s2">Small Steps,<br />Big Opportunities ♡</div>
+        <div class="sticky s3">You<br />Got<br />This ♡</div>
+      </div>
     </section>
 
-    <section aria-labelledby="browse-title">
-      <h2 id="browse-title" class="visually-hidden">Browse roadmaps</h2>
+    <section class="feature-strip" aria-label="Why Road2Role">
+      <div class="feature">
+        <span class="f-icon" aria-hidden="true">🗺️</span>
+        <div><h3>Structured Roadmaps</h3><p>Follow step-by-step learning paths for your dream role.</p></div>
+      </div>
+      <div class="feature">
+        <span class="f-icon" aria-hidden="true">📈</span>
+        <div><h3>Track Your Progress</h3><p>Mark topics as done, stay consistent and see your growth.</p></div>
+      </div>
+      <div class="feature">
+        <span class="f-icon" aria-hidden="true">📚</span>
+        <div><h3>Curated Resources</h3><p>Articles and videos for every topic, right where you need them.</p></div>
+      </div>
+    </section>
+
+    <section id="roadmaps" aria-labelledby="browse-title" style="scroll-margin-top: 90px;">
+      <div class="section-head">
+        <h2 id="browse-title">Browse Roadmaps</h2>
+        <p>Pick a path, learn step by step and get job-ready.</p>
+      </div>
 
       <div class="toolbar">
         <div class="search-box">
@@ -85,11 +134,7 @@
 
   <footer class="site-footer">
     <div class="container">
-      <span>Rebuilt with plain HTML, CSS &amp; JavaScript + a REST API.</span>
-      <span>
-        <a href="/api/docs">API reference</a> ·
-        <a href="/api/v1/health">Health</a>
-      </span>
+      <span><span class="brand-line">Road2Role</span> · Learn, build, get hired.</span>
     </div>
   </footer>
 
