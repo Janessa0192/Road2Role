@@ -96,8 +96,7 @@ function sendWithEtag(req, res, status, payload, { maxAge = 0, cacheStatus } = {
  *      &sort=&order=   -> paginated, filtered, sorted collection           */
 router.get('/', validate({ query: listQuerySchema }), (req, res, next) => {
   try {
-    const { page, limit, search, category, tag, difficulty, sort, order } = req.query;
-    const where = [];
+    const { page, limit, search, category, tag, difficulty, sort, order } = res.locals.validatedQuery;    const where = [];
     const params = [];
 
     if (search) {

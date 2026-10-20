@@ -25,6 +25,7 @@ describe('migrations', () => {
       '003_resources_search.sql',
       '004_tasks.sql',
       '005_quizzes.sql',
+      '006_roadmap_layout.sql',
     ]);
   });
 });
