@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Road2Role</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/index.html" aria-label="Road2Role home">
+        <svg class="brand-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 7 3 14.5 20 22l17-7.5L20 7Z" fill="currentColor"/><path d="M10 19v7c0 2.6 4.5 5 10 5s10-2.4 10-5v-7l-10 4.4L10 19Z" fill="currentColor" opacity=".75"/><path d="M36 15.5V26" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <span class="brand-text">Road2Role</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="nav-link" href="/index.html">Home</a>
+        <a class="nav-link" href="/index.html#roadmaps">Roadmaps</a>
+        <span data-auth-area></span>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <p class="status-line" role="status" aria-live="polite" data-gate>Checking access…</p>
+
+    <div data-admin hidden>
+      <div class="admin-head">
+        <div>
+          <h1>Admin panel</h1>
+          <p class="admin-sub">Add, edit or delete roadmaps. Changes go live immediately.</p>
+        </div>
+        <button class="btn btn-primary" type="button" data-new>+ Add roadmap</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <label class="visually-hidden" for="a-search">Search roadmaps</label>
+          <input id="a-search" type="search" placeholder="Search roadmaps…" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="alert alert-error" data-page-error hidden role="alert"></div>
+      <div class="alert alert-success" data-page-ok hidden role="status"></div>
+
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Title</th><th>Slug</th><th>Category</th><th>Difficulty</th><th>Order</th><th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody data-rows></tbody>
+        </table>
+      </div>
+      <p class="status-line" data-table-status>Loading…</p>
+
+      <nav class="pager" data-pager hidden aria-label="Pagination">
+        <button class="btn btn-sm" type="button" data-prev>← Previous</button>
+        <span class="page-info" data-page-info></span>
+        <button class="btn btn-sm" type="button" data-next>Next →</button>
+      </nav>
+    </div>
+  </main>
+
+  <!-- Add / edit dialog -->
+  <dialog class="admin-dialog" data-form-dialog>
+    <form data-form method="dialog" novalidate>
+      <h2 data-form-title>Add roadmap</h2>
+      <div class="alert alert-error" data-form-error hidden role="alert"></div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="f-title">Title *</label>
+          <input id="f-title" name="title" type="text" maxlength="120" required />
+          <p class="field-error" data-error-for="title"></p>
+        </div>
+        <div class="field">
+          <label for="f-slug">Slug * <span class="hint-inline">(URL name, e.g. data-analyst)</span></label>
+          <input id="f-slug" name="slug" type="text" maxlength="80" required />
+          <p class="field-error" data-error-for="slug"></p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-brief">Short title</label>
+        <input id="f-brief" name="briefTitle" type="text" maxlength="120" />
+        <p class="field-error" data-error-for="briefTitle"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-desc">Description</label>
+        <textarea id="f-desc" name="description" rows="3" maxlength="600"></textarea>
+        <p class="field-error" data-error-for="description"></p>
+      </div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label for="f-category">Category</label>
+          <select id="f-category" name="category">
+            <option value="role">Role</option>
+            <option value="language">Language</option>
+            <option value="framework">Framework</option>
+            <option value="tool">Tool</option>
+            <option value="database">Database</option>
+            <option value="concept">Concept</option>
+            <option value="other" selected>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-difficulty">Difficulty</label>
+          <select id="f-difficulty" name="difficulty">
+            <option value="beginner" selected>Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-tag">Tag</label>
+          <input id="f-tag" name="tag" type="text" maxlength="40" value="general" />
+          <p class="field-error" data-error-for="tag"></p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="f-order">Order (0 = first)</label>
+          <input id="f-order" name="order" type="number" min="0" value="0" />
+          <p class="field-error" data-error-for="order"></p>
+        </div>
+        <div class="field">
+          <label for="f-image">Image URL</label>
+          <input id="f-image" name="imageUrl" type="text" maxlength="300" placeholder="/images/example.png" />
+          <p class="field-error" data-error-for="imageUrl"></p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-article">About this roadmap (Markdown)</label>
+        <textarea id="f-article" name="articleMd" rows="6" maxlength="50000"></textarea>
+        <p class="field-error" data-error-for="articleMd"></p>
+      </div>
+
+      <div class="checks">
+        <label><input type="checkbox" name="isForkable" checked /> Forkable</label>
+        <label><input type="checkbox" name="hasTopics" checked /> Has topics</label>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="btn" type="button" data-cancel>Cancel</button>
+        <button class="btn btn-primary" type="submit" data-save>Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Delete confirmation -->
+  <dialog class="admin-dialog small" data-delete-dialog>
+    <h2>Delete roadmap?</h2>
+    <p>This will permanently delete <strong data-delete-name></strong> along with its topics and users' progress on it. This cannot be undone.</p>
+    <div class="dialog-actions">
+      <button class="btn" type="button" data-delete-cancel>Cancel</button>
+      <button class="btn btn-danger" type="button" data-delete-confirm>Yes, delete</button>
+    </div>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span><span class="brand-line">Road2Role</span> · Admin</span>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/nav.js"></script>
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

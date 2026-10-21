@@ -18,7 +18,9 @@ function renderNav(state) {
 
   if (state.user) {
     const initial = escapeHtml((state.user.username || '?').charAt(0).toUpperCase());
+    const adminLink = state.user.role === 'admin' ? '<a class="nav-link" href="/admin.html">Admin</a>' : '';
     mount.innerHTML = `
+      ${adminLink}
       <a class="nav-link" href="/account.html">Hello, ${escapeHtml(state.user.username)}</a>
       <a class="nav-link" href="/account.html" aria-label="Your account, avatar ${initial}">${initial}</a>
       <button class="btn btn-sm" type="button" data-logout>Log out</button>
@@ -57,7 +59,37 @@ function renderNav(state) {
 
 authStore.subscribe(renderNav);
 
+/** Mobile menu: injects a hamburger button in front of the nav (CSS shows it only on small screens). */
+function setupMenuToggle() {
+  const header = document.querySelector('.site-header');
+  const nav = header?.querySelector('.site-nav');
+  if (!header || !nav || header.querySelector('.nav-toggle')) return;
+  if (!nav.id) nav.id = 'site-nav';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'nav-toggle';
+  btn.setAttribute('aria-controls', nav.id);
+  btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-label', 'Toggle menu');
+  btn.innerHTML = '<span class="bar"></span><span class="bar"></span><span class="bar"></span>';
+  nav.before(btn);
+
+  const setOpen = (open) => {
+    header.classList.toggle('nav-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  };
+  btn.addEventListener('click', () => setOpen(!header.classList.contains('nav-open')));
+  nav.addEventListener('click', (event) => {
+    if (event.target.closest('a')) setOpen(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setOpen(false);
+  });
+}
+
 export function initNav() {
+  setupMenuToggle();
   renderNav(authStore.get());
   loadAuth(); // async; renderNav re-runs through the subscription
 }

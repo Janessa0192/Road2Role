@@ -944,3 +944,87 @@ main.container { padding-block: 0 3.5rem; }
 .hero-visual { padding-bottom: 3.2rem; }
 .sticky.s2 { bottom: 2%; left: 2%; }
 .sticky.s3 { bottom: 14%; }
+
+/* =============================================================
+   Responsive layer (phones -> tablets -> desktop)
+   ============================================================= */
+main.container { padding-block: 1.5rem 3.5rem; }
+.hero { padding-top: 1.5rem; }
+img, svg, video { max-width: 100%; }
+.nav-toggle { display: none; }
+
+/* ---------- tablets and below ---------- */
+@media (max-width: 860px) {
+  .hero-copy { text-align: left; }
+  .hero-visual { min-height: 340px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+  .roadmap-header { gap: 0.8rem; }
+}
+
+/* ---------- phones: hamburger menu ---------- */
+@media (max-width: 760px) {
+  .site-header .container { min-height: 60px; gap: 0.5rem; flex-wrap: wrap; padding-block: 0.5rem; }
+  .brand { font-size: 1.2rem; }
+  .brand .brand-icon { width: 30px; height: 30px; }
+
+  .nav-toggle {
+    display: inline-flex; flex-direction: column; justify-content: center; gap: 5px;
+    margin-left: auto; width: 44px; height: 44px; padding: 0 11px;
+    background: #fff; border: 1px solid var(--border); border-radius: 10px; cursor: pointer;
+  }
+  .nav-toggle .bar { display: block; height: 2px; background: var(--text); border-radius: 2px; transition: transform .2s, opacity .2s; }
+  .nav-open .nav-toggle .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-open .nav-toggle .bar:nth-child(2) { opacity: 0; }
+  .nav-open .nav-toggle .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .site-nav { display: none; width: 100%; flex-direction: column; align-items: stretch; gap: 0.15rem; padding: 0.4rem 0 0.8rem; border-top: 1px solid var(--border); }
+  .nav-open .site-nav { display: flex; }
+  .site-nav .nav-link, .site-nav .btn { padding: 0.75rem 0.9rem; border-radius: 10px; text-align: left; justify-content: flex-start; font-size: 1rem; }
+  .site-nav .btn-primary { justify-content: center; text-align: center; margin-top: 0.3rem; }
+  .site-nav [data-auth-area] { display: flex; flex-direction: column; gap: 0.15rem; }
+  .site-nav [data-auth-area] .btn { margin-top: 0.3rem; justify-content: center; }
+  .site-nav a[aria-label^="Your account"] { display: none; } /* avatar duplicates "Hello, name" in the menu */
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 640px) {
+  main.container { padding-block: 1rem 2.5rem; }
+  .hero { gap: 1.5rem; padding-top: 0.8rem; }
+  .hero h1 { font-size: clamp(2.1rem, 10vw, 2.7rem); }
+  .hero p { font-size: 1rem; }
+  .hero-actions { flex-direction: column; }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+  .hero-visual { min-height: 320px; padding: 1rem; border-radius: 20px; }
+  .sticky { font-size: 0.74rem; padding: 0.5rem 0.65rem; }
+  .section-head { text-align: left; }
+  .toolbar select, .toolbar .search-box { width: 100%; }
+  .chip-row { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.4rem; -webkit-overflow-scrolling: touch; }
+  .chip { flex: none; }
+  .pager { flex-wrap: wrap; justify-content: center; gap: 0.6rem; }
+  .form-card { padding: 1.3rem; margin-inline: auto; }
+  .profile-card { padding: 1rem; }
+  .site-footer .container { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+  /* 16px inputs stop iOS Safari from zooming in on focus */
+  input, select, textarea { font-size: 16px; }
+}
+
+/* ---------- very small phones ---------- */
+@media (max-width: 380px) {
+  .container { width: min(100% - 1.4rem, var(--maxw)); }
+  .grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 2rem; }
+  .feature { padding: 0.9rem; }
+}
+
+/* ---------- touch screens: bigger tap targets ---------- */
+@media (pointer: coarse) {
+  .btn, .chip, .nav-link, select { min-height: 44px; }
+  .btn-sm { min-height: 40px; }
+}
+
+/* ---------- roadmap diagram: readable, scrolls sideways on small screens ---------- */
+@media (max-width: 800px) {
+  [data-interactive] { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 12px !important; }
+  [data-interactive]::before { content: "← Swipe sideways to explore the roadmap →"; display: block; position: sticky; left: 0; margin-bottom: 0.5rem; font-size: 0.78rem; color: var(--muted); }
+  [data-interactive] .rm-svg { min-width: 960px; }
+}
