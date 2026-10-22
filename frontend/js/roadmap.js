@@ -94,7 +94,12 @@ async function setupInteractive(layout) {
   renderProgress(done.size, total);
 
   const resSection = $('[data-resources-section]');
-  const resources = renderResources($('[data-resources]'), layout, done);
+  const resources = renderResources(
+  $('[data-resources]'),
+  layout,
+  done,
+  { roadmapSlug: slug, user },
+);
   resSection.hidden = false;
 
   const base = `/me/progress/${enc(slug)}`;
