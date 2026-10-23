@@ -1,4 +1,3 @@
-
 import { Router } from 'express';
 import Joi from 'joi';
 import { query } from '../../db/index.js';
@@ -25,15 +24,19 @@ const submitSchema = Joi.object({
   answers: Joi.array().items(answerSchema).required(),
 });
 
-/* GET /api/v1/quizzes?roadmap=frontend&topic=101-html */
+/* GET /api/v1/quizzes?roadmap=frontend
+   GET /api/v1/quizzes?roadmap=frontend&topic=101-html */
+
 router.get('/', (req, res) => {
   const { roadmap, topic } = req.query;
 
   let sql = `
-    SELECT id, roadmap_slug, topic_key, title, description, pass_percent
+    SELECT id, roadmap_slug, topic_key, title, description,
+           pass_percent, quiz_type
     FROM quizzes
     WHERE is_active = 1
   `;
+
   const params = [];
 
   if (roadmap) {
@@ -42,22 +45,41 @@ router.get('/', (req, res) => {
   }
 
   if (topic) {
-    sql += ' AND topic_key = ?';
+    sql += " AND topic_key = ? AND quiz_type = 'topic'";
     params.push(topic);
+  } else {
+    sql += " AND quiz_type = 'roadmap'";
   }
 
-  sql += ' ORDER BY roadmap_slug, topic_key, id';
+  sql += ' ORDER BY roadmap_slug, id';
 
   res.json({ quizzes: query.all(sql, ...params) });
 });
 
-/* GET /api/v1/quizzes/:id - questions without correct answers */
+/* History route must come before /:id. */
+router.get('/attempts/history', requireAuth, (req, res) => {
+  const history = query.all(
+    `SELECT attempt_id, quiz_id, quiz_title, roadmap_slug, topic_key,
+            score, total_questions, percent, pass_percent, passed,
+            started_at, submitted_at, duration_seconds
+     FROM v_quiz_history
+     WHERE user_id = ?
+     ORDER BY submitted_at DESC`,
+    req.user.id,
+  );
+
+  res.json({ history });
+});
+
+/* GET /api/v1/quizzes/:id */
 router.get('/:id', validate({ params: idSchema }), (req, res) => {
   const quizId = Number(req.params.id);
 
   const quiz = query.get(
-    `SELECT id, roadmap_slug, topic_key, title, description, pass_percent
-     FROM quizzes WHERE id = ? AND is_active = 1`,
+    `SELECT id, roadmap_slug, topic_key, title, description,
+            pass_percent, quiz_type
+     FROM quizzes
+     WHERE id = ? AND is_active = 1`,
     quizId,
   );
 
@@ -66,8 +88,9 @@ router.get('/:id', validate({ params: idSchema }), (req, res) => {
   }
 
   const questions = query.all(
-    `SELECT id, question_text, explanation, order_index
-     FROM quiz_questions WHERE quiz_id = ?
+    `SELECT id, question_text, order_index
+     FROM quiz_questions
+     WHERE quiz_id = ?
      ORDER BY order_index, id`,
     quizId,
   );
@@ -76,7 +99,8 @@ router.get('/:id', validate({ params: idSchema }), (req, res) => {
     ...question,
     options: query.all(
       `SELECT id, option_text, order_index
-       FROM quiz_options WHERE question_id = ?
+       FROM quiz_options
+       WHERE question_id = ?
        ORDER BY order_index, id`,
       question.id,
     ),
@@ -85,33 +109,62 @@ router.get('/:id', validate({ params: idSchema }), (req, res) => {
   res.json({ quiz, questions: result });
 });
 
-/* POST /api/v1/quizzes/attempts - start attempt */
-router.post('/attempts', requireAuth, validate({ body: startSchema }), (req, res) => {
-  const { quizId } = req.body;
+/* POST /api/v1/quizzes/attempts */
+router.post(
+  '/attempts',
+  requireAuth,
+  validate({ body: startSchema }),
+  (req, res) => {
+    const { quizId } = req.body;
 
-  const quiz = query.get(
-    'SELECT id FROM quizzes WHERE id = ? AND is_active = 1',
-    quizId,
-  );
+    const quiz = query.get(
+      `SELECT id, quiz_type
+       FROM quizzes
+       WHERE id = ? AND is_active = 1`,
+      quizId,
+    );
 
-  if (!quiz) {
-    throw ApiError.notFound('quiz_not_found', 'Quiz not found');
-  }
+    if (!quiz) {
+      throw ApiError.notFound('quiz_not_found', 'Quiz not found');
+    }
 
-  const attempt = query.run(
-    'INSERT INTO quiz_attempts (user_id, quiz_id) VALUES (?, ?)',
-    req.user.id,
-    quizId,
-  );
+    const questionCount = query.get(
+      `SELECT COUNT(*) AS total
+       FROM quiz_questions
+       WHERE quiz_id = ?`,
+      quizId,
+    ).total;
 
-  const created = query.get(
-    `SELECT id, quiz_id, total_questions, started_at
-     FROM quiz_attempts WHERE id = ?`,
-    attempt.lastInsertRowid,
-  );
+    if (questionCount === 0) {
+      throw ApiError.badRequest(
+        'quiz_empty',
+        'This quiz does not contain any questions yet.',
+      );
+    }
 
-  res.status(201).json({ attempt: created });
-});
+    if (quiz.quiz_type === 'roadmap' && questionCount !== 50) {
+      throw ApiError.badRequest(
+        'roadmap_quiz_incomplete',
+        'The roadmap quiz must contain exactly 50 questions before it can be started.',
+      );
+    }
+
+    const attempt = query.run(
+      'INSERT INTO quiz_attempts (user_id, quiz_id) VALUES (?, ?)',
+      req.user.id,
+      quizId,
+    );
+
+    const created = query.get(
+      `SELECT id, quiz_id, total_questions, started_at
+       FROM quiz_attempts
+       WHERE id = ?`,
+      attempt.lastInsertRowid,
+    );
+
+    res.status(201).json({ attempt: created });
+  },
+);
 
 /* POST /api/v1/quizzes/attempts/:id/answers */
 router.post(
@@ -123,7 +176,9 @@ router.post(
     const { answers } = req.body;
 
     const attempt = query.get(
-      'SELECT id, quiz_id, user_id, submitted_at FROM quiz_attempts WHERE id = ?',
+      `SELECT id, quiz_id, user_id, submitted_at
+       FROM quiz_attempts
+       WHERE id = ?`,
       attemptId,
     );
 
@@ -132,11 +187,56 @@ router.post(
     }
 
     if (attempt.submitted_at) {
-      throw ApiError.badRequest('attempt_submitted', 'This attempt is already submitted');
+      throw ApiError.badRequest(
+        'attempt_submitted',
+        'This attempt is already submitted.',
+      );
+    }
+
+    const questionIds = answers.map((answer) => answer.questionId);
+
+    if (new Set(questionIds).size !== questionIds.length) {
+      throw ApiError.badRequest(
+        'duplicate_answers',
+        'Each question can be answered only once per submission.',
+      );
+    }
+
+    const validQuestions = query.all(
+      'SELECT id FROM quiz_questions WHERE quiz_id = ?',
+      attempt.quiz_id,
+    );
+
+    const validQuestionIds = new Set(
+      validQuestions.map((question) => question.id),
+    );
+
+    if (answers.some((answer) => !validQuestionIds.has(answer.questionId))) {
+      throw ApiError.badRequest(
+        'invalid_question',
+        'One or more questions do not belong to this quiz.',
+      );
     }
 
     query.tx(() => {
       for (const answer of answers) {
+        if (answer.optionId !== null) {
+          const validOption = query.get(
+            `SELECT id
+             FROM quiz_options
+             WHERE id = ? AND question_id = ?`,
+            answer.optionId,
+            answer.questionId,
+          );
+
+          if (!validOption) {
+            throw ApiError.badRequest(
+              'invalid_option',
+              'An answer option does not belong to its question.',
+            );
+          }
+        }
+
         query.run(
           `INSERT INTO quiz_attempt_answers
              (attempt_id, question_id, option_id)
@@ -157,8 +257,10 @@ router.post(
 
     const result = query.get(
       `SELECT id, quiz_title, score, total_questions, percent,
-              pass_percent, passed, started_at, submitted_at, duration_seconds
-       FROM quiz_attempts WHERE id = ?`,
+              pass_percent, passed, started_at, submitted_at,
+              duration_seconds
+       FROM quiz_attempts
+       WHERE id = ?`,
       attemptId,
     );
 
@@ -166,26 +268,7 @@ router.post(
   },
 );
 
-/* GET /api/v1/quizzes/attempts/history - signed-in user's history */
-router.get('/attempts/history', requireAuth, (req, res) => {
-  const history = query.all(
-    `SELECT attempt_id, quiz_id, quiz_title, roadmap_slug, topic_key,
-            score, total_questions, percent, pass_percent, passed,
-            started_at, submitted_at, duration_seconds
-     FROM v_quiz_history
-     WHERE user_id = ?
-     ORDER BY submitted_at DESC`,
-    req.user.id,
-  );
-
-  res.json({ history });
-});
-
-export default router;
-
-
-/* GET /api/v1/quizzes/attempts/:id/review
-   Reveal correct answers only after submission, to the attempt owner. */
+/* GET /api/v1/quizzes/attempts/:id/review */
 router.get(
   '/attempts/:id/review',
   requireAuth,
@@ -207,7 +290,7 @@ router.get(
     if (!attempt.submitted_at) {
       throw ApiError.badRequest(
         'attempt_not_submitted',
-        'Submit the quiz before viewing the answers',
+        'Submit the quiz before viewing the answers.',
       );
     }
 
@@ -232,3 +315,5 @@ router.get(
     res.json({ questions });
   },
 );
+
+export default router;

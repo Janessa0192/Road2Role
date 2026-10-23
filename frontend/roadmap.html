@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -14,13 +15,17 @@
   <header class="site-header">
     <div class="container">
       <a class="brand" href="/index.html" aria-label="Road2Role home">
-        <svg class="brand-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 7 3 14.5 20 22l17-7.5L20 7Z" fill="currentColor"/><path d="M10 19v7c0 2.6 4.5 5 10 5s10-2.4 10-5v-7l-10 4.4L10 19Z" fill="currentColor" opacity=".75"/><path d="M36 15.5V26" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <svg class="brand-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <path d="M20 7 3 14.5 20 22l17-7.5L20 7Z" fill="currentColor"/>
+          <path d="M10 19v7c0 2.6 4.5 5 10 5s10-2.4 10-5v-7l-10 4.4L10 19Z" fill="currentColor" opacity=".75"/>
+          <path d="M36 15.5V26" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
         <span class="brand-text">Road2Role</span>
       </a>
+
       <nav class="site-nav" aria-label="Main">
         <a class="nav-link" href="/index.html">Home</a>
         <a class="nav-link" href="/index.html#roadmaps">Roadmaps</a>
-        
         <span data-auth-area></span>
       </nav>
     </div>
@@ -29,7 +34,9 @@
   <main id="main" class="container">
     <p class="breadcrumbs"><a href="/index.html">← All roadmaps</a></p>
 
-    <p class="status-line" role="status" aria-live="polite" data-status>Loading roadmap…</p>
+    <p class="status-line" role="status" aria-live="polite" data-status>
+      Loading roadmap…
+    </p>
 
     <div data-roadmap-root hidden>
       <header class="roadmap-header">
@@ -47,28 +54,96 @@
           <strong id="progress-title">Your progress</strong>
           <span data-progress-text class="page-info"></span>
         </div>
-        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-progress-bar>
+
+        <div class="progress-track"
+             role="progressbar"
+             aria-valuemin="0"
+             aria-valuemax="100"
+             aria-valuenow="0"
+             data-progress-bar>
           <div class="progress-fill" style="width: 0%" data-progress-fill></div>
         </div>
-        <p class="hint" data-progress-hint style="color: var(--muted); font-size: 0.85rem; margin: 0.5rem 0 0;"></p>
+
+        <p class="hint"
+           data-progress-hint
+           style="color: var(--muted); font-size: 0.85rem; margin: 0.5rem 0 0;">
+        </p>
       </section>
 
-      <section class="article" data-article hidden aria-label="What is this roadmap about"></section>
+      <!-- Roadmap Final Assessment -->
+      <section class="progress-panel"
+               data-roadmap-quiz
+               aria-labelledby="final-quiz-title"
+               hidden
+               style="margin-top: 1.5rem;">
 
-      <section class="roadmap-interactive" data-interactive hidden aria-label="Interactive roadmap"></section>
+        <div class="row" style="align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 220px;">
+            <h2 id="final-quiz-title" style="font-size: 1.2rem; margin: 0 0 0.5rem;">
+              Final Assessment
+            </h2>
 
-      <section class="roadmap-visual" data-visual hidden aria-label="Roadmap diagram">
+            <p style="color: var(--muted); margin: 0;">
+              Test your knowledge across the complete roadmap.
+            </p>
+
+            <p class="hint" style="margin-bottom: 0;">
+              50 MCQs · Score out of 50 · Pass mark: 60%
+            </p>
+          </div>
+
+          <button class="btn"
+                  type="button"
+                  data-start-roadmap-quiz>
+            Start Quiz →
+          </button>
+        </div>
+
+        <p class="field-error"
+           data-roadmap-quiz-error
+           role="alert"
+           hidden>
+        </p>
+      </section>
+
+      <section class="article"
+               data-article
+               hidden
+               aria-label="What is this roadmap about">
+      </section>
+
+      <section class="roadmap-interactive"
+               data-interactive
+               hidden
+               aria-label="Interactive roadmap">
+      </section>
+
+      <section class="roadmap-visual"
+               data-visual
+               hidden
+               aria-label="Roadmap diagram">
         <div class="scroll">
           <img data-image alt="" />
         </div>
-        <p class="caption">Full size diagram - open in a new tab for details: <a data-image-link href="#" target="_blank" rel="noopener">open image</a></p>
+
+        <p class="caption">
+          Full size diagram - open in a new tab for details:
+          <a data-image-link href="#" target="_blank" rel="noopener">open image</a>
+        </p>
       </section>
 
-      <!-- Resources for the topic you click in the roadmap. Progress is NOT tracked here. -->
-      <section class="res-section" aria-labelledby="res-title" data-resources-section hidden>
+      <!-- Resources for the topic you click in the roadmap -->
+      <section class="res-section"
+               aria-labelledby="res-title"
+               data-resources-section
+               hidden>
         <h2 id="res-title">Topics &amp; resources</h2>
-        <p class="res-hint">Click any box in the roadmap above to jump to its resources here.
-          Hover a box and press the check to mark it as completed.</p>
+
+        <p class="res-hint">
+          Click any box in the roadmap above to jump to its resources here.
+          Hover a box and press the check to mark it as completed.
+        </p>
+
         <div class="res-list" data-resources></div>
       </section>
 
@@ -77,10 +152,15 @@
         <h2 id="topics-title" style="font-size: 1.2rem;">Topics</h2>
         <div class="topic-list" data-topics></div>
       </section>
+
       <p class="field-error" data-progress-error aria-live="assertive"></p>
 
-      <section aria-labelledby="related-title" hidden data-related-section>
-        <h2 id="related-title" style="font-size: 1.2rem; margin-top: 2rem;">Related roadmaps</h2>
+      <section aria-labelledby="related-title"
+               hidden
+               data-related-section>
+        <h2 id="related-title" style="font-size: 1.2rem; margin-top: 2rem;">
+          Related roadmaps
+        </h2>
         <div class="chip-row" data-related></div>
       </section>
     </div>
@@ -89,7 +169,6 @@
   <footer class="site-footer">
     <div class="container">
       <span><span class="brand-line">Road2Role</span> · Learn, build, get hired.</span>
-      
     </div>
   </footer>
 
@@ -97,3 +176,4 @@
   <script type="module" src="/js/roadmap.js"></script>
 </body>
 </html>
+```

@@ -8,6 +8,7 @@ import { hashPassword } from '../lib/password.js';
 import { seedResources } from './seed_resources.js';
 import { seedQuizzes } from './seed_quizzes.js';
 import { convertLayout } from '../lib/roadmapLayout.js';
+import { pathToFileURL } from 'node:url';
 
 /**
  * Static seed metadata (category / difficulty / tag facets used for
@@ -289,7 +290,7 @@ export function runSeed({ force = false } = {}) {
 }
 
 // CLI: npm run seed [-- --force]
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const force = process.argv.includes('--force');
   const result = runSeed({ force });
   console.log(
