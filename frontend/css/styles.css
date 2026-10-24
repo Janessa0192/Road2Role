@@ -1028,3 +1028,49 @@ img, svg, video { max-width: 100%; }
   [data-interactive]::before { content: "← Swipe sideways to explore the roadmap →"; display: block; position: sticky; left: 0; margin-bottom: 0.5rem; font-size: 0.78rem; color: var(--muted); }
   [data-interactive] .rm-svg { min-width: 960px; }
 }
+/* =============================================================
+   Learning streak (navbar pill + account page card)
+   Uses only theme variables, so it follows light / dark mode.
+   ============================================================= */
+.streak-pill {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.3rem 0.75rem; border-radius: 999px;
+  background: var(--surface-2); color: var(--muted);
+  border: 1px solid var(--border);
+  font-weight: 700; font-size: 0.92rem; line-height: 1.2;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+.streak-pill:hover { text-decoration: none; transform: translateY(-1px); border-color: #f59e0b; }
+.streak-pill .streak-flame { filter: grayscale(1); opacity: 0.55; transition: filter .2s, opacity .2s; }
+.streak-pill.is-lit { color: #b45309; background: #fff4e0; border-color: #fcd9a3; }
+.streak-pill.is-lit .streak-flame { filter: none; opacity: 1; }
+[data-theme="dark"] .streak-pill.is-lit { color: #fcd34d; background: rgba(245, 158, 11, 0.16); border-color: rgba(245, 158, 11, 0.4); }
+
+.streak-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-sm);
+  padding: 1.1rem 1.25rem 1.2rem; margin-bottom: 1.5rem; scroll-margin-top: 90px;
+}
+.streak-card.is-lit { border-color: #fcd9a3; }
+[data-theme="dark"] .streak-card.is-lit { border-color: rgba(245, 158, 11, 0.45); }
+.streak-main { display: flex; align-items: center; gap: 0.9rem; }
+.streak-big-flame { font-size: 2.4rem; line-height: 1; filter: grayscale(1); opacity: 0.5; }
+.streak-card.is-lit .streak-big-flame { filter: none; opacity: 1; }
+.streak-main h2 { margin: 0; font-size: 1.35rem; }
+.streak-main p { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.92rem; }
+.streak-week { list-style: none; margin: 1rem 0 0.9rem; padding: 0; display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.35rem; }
+.streak-day { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+.streak-day .dot {
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--surface-2); border: 2px solid var(--border); font-size: 1rem;
+}
+.streak-day.is-active .dot { background: #fff4e0; border-color: #f59e0b; }
+[data-theme="dark"] .streak-day.is-active .dot { background: rgba(245, 158, 11, 0.18); }
+.streak-day.is-today .dot { box-shadow: 0 0 0 3px var(--accent-soft); }
+.streak-day .lbl { font-size: 0.72rem; color: var(--muted); font-weight: 600; }
+.streak-stats { display: flex; gap: 2rem; margin: 0; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+.streak-stats dt { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+.streak-stats dd { margin: 0.1rem 0 0; font-size: 1.15rem; font-weight: 800; }
+@media (max-width: 760px) {
+  .site-nav .streak-pill { align-self: flex-start; margin: 0.3rem 0.9rem; }
+}

@@ -26,6 +26,8 @@ describe('migrations', () => {
       '004_tasks.sql',
       '005_quizzes.sql',
       '006_roadmap_layout.sql',
+      '007_roadmap_quiz.sql',
+      '008_streaks.sql',
     ]);
   });
 });
