@@ -267,6 +267,28 @@ export const openApiSpec = {
         },
       },
     },
+    '/api/v1/me/streak': {
+      get: {
+        tags: ['Me'],
+        summary: 'Learning streak of the signed-in user',
+        description: 'Send your IANA timezone in the `X-Timezone` header (e.g. `Asia/Kolkata`) so "today" is your today. Defaults to UTC.',
+        parameters: [{ name: 'X-Timezone', in: 'header', required: false, schema: { type: 'string', example: 'Asia/Kolkata' } }],
+        responses: {
+          200: {
+            description: 'Streak numbers',
+            content: { 'application/json': { schema: { type: 'object', properties: { data: { type: 'object', properties: {
+              current: { type: 'integer', description: 'Consecutive active days ending today (or yesterday)' },
+              longest: { type: 'integer' },
+              activeToday: { type: 'boolean' },
+              totalDays: { type: 'integer' },
+              lastActiveDay: { type: 'string', nullable: true, example: '2026-10-24' },
+              last7: { type: 'array', items: { type: 'object', properties: { date: { type: 'string' }, active: { type: 'boolean' } } } },
+            } } } } } },
+          },
+          401: { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
     '/api/v1/me/progress': {
       get: {
         tags: ['Me'],

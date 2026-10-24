@@ -5,6 +5,7 @@ import { ApiError } from '../../middleware/error.js';
 import { validate, common } from '../../middleware/validate.js';
 import { requireAuth } from '../../middleware/auth.js';
 import { layoutTopicKeys } from '../../lib/topicContent.js';
+import { getStreak, recordActivity, resolveTimeZone } from '../../lib/streak.js';
 
 const router = Router();
 
@@ -14,6 +15,18 @@ router.use(requireAuth);
 const slugParams = Joi.object({ slug: common.slug.required() });
 const topicParams = slugParams.keys({
   topicKey: Joi.string().pattern(/^[a-z0-9._:-]+$/i).max(200).required(),
+});
+
+/* ========================================================= MY STREAK ====== */
+/* Current / longest learning streak. The browser sends its timezone in the
+ * X-Timezone header so "today" means the user's today, not the server's. */
+router.get('/streak', (req, res, next) => {
+  try {
+    const tz = resolveTimeZone(req.get('x-timezone'));
+    return res.json({ data: getStreak(req.user.id, tz) });
+  } catch (err) {
+    return next(err);
+  }
 });
 
 /* ====================================================== MY PROGRESS ====== */
@@ -116,6 +129,10 @@ router.put(
         status,
       );
 
+      // learning today? -> keeps / extends the streak (un-marking never counts)
+      const tz = resolveTimeZone(req.get('x-timezone'));
+      if (status !== 'not_started') recordActivity(req.user.id, tz);
+
       const row = query.get(
         `SELECT roadmap_slug AS roadmapSlug, topic_key AS topicKey, status,
                 started_at AS startedAt, completed_at AS completedAt,
@@ -125,7 +142,7 @@ router.put(
         slug,
         topicKey,
       );
-      return res.json({ data: row });
+      return res.json({ data: row, streak: getStreak(req.user.id, tz) });
     } catch (err) {
       return next(err);
     }

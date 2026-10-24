@@ -36,6 +36,41 @@ function renderProgressItem(summary) {
   return item;
 }
 
+function renderStreak(data) {
+  const $ = (sel) => document.querySelector(sel);
+  $('[data-streak-current]').textContent = data.current;
+  $('[data-streak-longest]').textContent = data.longest;
+  $('[data-streak-total]').textContent = data.totalDays;
+  $('[data-streak-card]').classList.toggle('is-lit', data.activeToday);
+
+  let message;
+  if (data.activeToday) message = "You've learned today - come back tomorrow to keep it going!";
+  else if (data.current > 0) message = `Learn something today to keep your ${data.current}-day streak alive.`;
+  else message = 'Complete a topic or take a quiz to start your streak.';
+  $('[data-streak-message]').textContent = message;
+
+  const week = $('[data-streak-week]');
+  week.innerHTML = '';
+  data.last7.forEach((day, index) => {
+    const [y, m, d] = day.date.split('-').map(Number);
+    const weekday = new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'short' });
+    const li = document.createElement('li');
+    li.className = `streak-day${day.active ? ' is-active' : ''}${index === 6 ? ' is-today' : ''}`;
+    li.setAttribute('aria-label', `${weekday}: ${day.active ? 'learned' : 'no activity'}${index === 6 ? ' (today)' : ''}`);
+    li.innerHTML = `<span class="dot" aria-hidden="true">${day.active ? '🔥' : ''}</span><span class="lbl">${escapeHtml(weekday)}</span>`;
+    week.appendChild(li);
+  });
+}
+
+async function loadStreak() {
+  try {
+    const payload = await api.get('/me/streak');
+    renderStreak(payload.data);
+  } catch (error) {
+    document.querySelector('[data-streak-message]').textContent = showError(error);
+  }
+}
+
 async function loadProgress() {
   try {
     const listPayload = await api.get('/me/progress');
@@ -85,6 +120,7 @@ async function boot() {
   }
 
   renderProfile(user);
+  loadStreak();
   await loadProgress();
 
   document.querySelector('[data-logout]')?.addEventListener('click', async () => {
