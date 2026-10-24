@@ -5,6 +5,15 @@
  */
 const BASE = '/api/v1';
 
+/** The user's IANA timezone (e.g. "Asia/Kolkata"). The server uses it to decide what "today" is for streaks. */
+const TIME_ZONE = (() => {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  } catch {
+    return 'UTC';
+  }
+})();
+
 export class ApiError extends Error {
   constructor(status, code, message, details) {
     super(message);
@@ -35,7 +44,7 @@ async function request(method, path, { body, query, headers } = {}) {
   const init = {
     method,
     credentials: 'same-origin', // send the sid session cookie
-    headers: { Accept: 'application/json', ...(headers || {}) },
+    headers: { Accept: 'application/json', 'X-Timezone': TIME_ZONE, ...(headers || {}) },
   };
   if (body !== undefined) {
     init.headers['Content-Type'] = 'application/json';

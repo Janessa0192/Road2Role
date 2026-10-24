@@ -5,6 +5,7 @@ import { query } from '../../db/index.js';
 import { ApiError } from '../../middleware/error.js';
 import { validate } from '../../middleware/validate.js';
 import { requireAuth } from '../../middleware/auth.js';
+import { getStreak, recordActivity, resolveTimeZone } from '../../lib/streak.js';
 
 const router = Router();
 
@@ -162,7 +163,11 @@ router.post(
       attemptId,
     );
 
-    res.json({ result });
+    // submitting a quiz counts as learning today
+    const tz = resolveTimeZone(req.get('x-timezone'));
+    recordActivity(req.user.id, tz);
+
+    res.json({ result, streak: getStreak(req.user.id, tz) });
   },
 );
 

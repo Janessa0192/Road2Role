@@ -7,6 +7,35 @@ function currentPage() {
   return path === '' ? 'index.html' : path;
 }
 
+/* ---- learning streak (the 🔥 pill) ---- */
+let streak = null; // { current, longest, activeToday, ... } from GET /me/streak
+let streakUserId = null;
+
+function streakPillHtml() {
+  const current = streak ? streak.current : 0;
+  const lit = Boolean(streak && streak.activeToday);
+  let label;
+  if (lit) label = `${current}-day streak - you've learned today. Great job!`;
+  else if (current > 0) label = `${current}-day streak - learn something today to keep it going!`;
+  else label = 'Start your streak - complete a topic or take a quiz today!';
+  return `<a class="streak-pill${lit ? ' is-lit' : ''}" href="/account.html#streak"
+             title="${escapeHtml(label)}" aria-label="${escapeHtml(label)}">
+            <span class="streak-flame" aria-hidden="true">🔥</span>
+            <span class="streak-count">${current}</span>
+          </a>`;
+}
+
+async function refreshStreak() {
+  if (!authStore.get().user) return;
+  try {
+    const payload = await api.get('/me/streak');
+    streak = payload.data;
+    renderNav(authStore.get());
+  } catch (error) {
+    console.warn('Could not load streak:', showError(error)); // the nav still works without it
+  }
+}
+
 function renderNav(state) {
   const mount = document.querySelector('[data-auth-area]');
   if (!mount) return;
@@ -21,6 +50,7 @@ function renderNav(state) {
     const adminLink = state.user.role === 'admin' ? '<a class="nav-link" href="/admin.html">Admin</a>' : '';
     mount.innerHTML = `
       ${adminLink}
+      ${streakPillHtml()}
       <a class="nav-link" href="/account.html">Hello, ${escapeHtml(state.user.username)}</a>
       <a class="nav-link" href="/account.html" aria-label="Your account, avatar ${initial}">${initial}</a>
       <button class="btn btn-sm" type="button" data-logout>Log out</button>
@@ -34,6 +64,7 @@ function renderNav(state) {
         // even if the API call fails, clear local auth state
         console.warn(showError(error));
       }
+      streak = null;
       authStore.set({ user: null });
       const page = currentPage();
       if (page === 'account.html') location.href = '/index.html';
@@ -57,7 +88,21 @@ function renderNav(state) {
   }
 }
 
-authStore.subscribe(renderNav);
+authStore.subscribe((state) => {
+  renderNav(state);
+  // load the streak once per signed-in user
+  if (state.user && streakUserId !== state.user.id) {
+    streakUserId = state.user.id;
+    refreshStreak();
+  } else if (!state.user) {
+    streakUserId = null;
+    streak = null;
+  }
+});
+
+// topics ticked on a roadmap / quizzes submitted -> refresh the counter
+document.addEventListener('progress-changed', refreshStreak);
+document.addEventListener('streak-refresh', refreshStreak);
 
 /** Mobile menu: injects a hamburger button in front of the nav (CSS shows it only on small screens). */
 function setupMenuToggle() {

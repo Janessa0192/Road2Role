@@ -42,6 +42,21 @@
       </aside>
 
       <section aria-labelledby="progress-heading">
+        <div class="streak-card" id="streak" data-streak-card aria-labelledby="streak-heading">
+          <div class="streak-main">
+            <span class="streak-big-flame" aria-hidden="true">🔥</span>
+            <div>
+              <h2 id="streak-heading"><span data-streak-current>0</span>-day streak</h2>
+              <p data-streak-message>Loading your streak…</p>
+            </div>
+          </div>
+          <ol class="streak-week" data-streak-week aria-label="Your last 7 days"></ol>
+          <dl class="streak-stats">
+            <div><dt>Longest streak</dt><dd><span data-streak-longest>0</span> days</dd></div>
+            <div><dt>Total active days</dt><dd data-streak-total>0</dd></div>
+          </dl>
+        </div>
+
         <h1 id="progress-heading" style="font-size: 1.3rem; margin-top: 0;">Your roadmap progress</h1>
         <p class="status-line" data-progress-status role="status" aria-live="polite">Loading progress…</p>
         <div class="progress-list" data-progress-list></div>

@@ -278,6 +278,9 @@ function showQuiz(container, quiz, questions) {
         throw new Error('Quiz submitted, but the result could not be read.');
       }
 
+      // a submitted quiz counts as learning today -> refresh the 🔥 counter
+      document.dispatchEvent(new CustomEvent('streak-refresh'));
+
       form.innerHTML = `
         <div class="quiz-result">
           <h3>Quiz Result</h3>
