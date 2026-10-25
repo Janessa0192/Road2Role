@@ -155,3 +155,66 @@ body.has-interactive .roadmap-visual { display: none !important; }
   border-radius: 8px;
   color: #1e293b;
 }
+
+/* ---------- roadmap practice quiz (below the progress bar) ---------- */
+.rq-section { margin: 1.25rem 0; }
+.rq-card {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.rq-title { margin: 0 0 .25rem; font-size: 1.2rem; }
+.rq-sub { margin: 0 0 1rem; color: var(--muted); }
+.rq-start { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; }
+.rq-count { display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; }
+.rq-count select {
+  padding: .45rem .6rem; border: 1px solid var(--border-strong); border-radius: 8px;
+  background: var(--surface); color: var(--text); font: inherit;
+}
+.rq-bank { margin: .75rem 0 0; font-size: .85rem; }
+
+.rq-meta { display: flex; justify-content: space-between; font-weight: 600; font-size: .9rem; color: var(--muted); }
+.rq-bar { height: 8px; margin: .5rem 0 .9rem; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.rq-bar-fill { height: 100%; background: var(--accent); transition: width .3s; }
+.rq-topic { margin: 0 0 .4rem; font-size: .85rem; color: var(--muted); }
+
+.rq-q { margin: 0; padding: 0; border: 0; min-width: 0; }
+.rq-q legend { padding: 0; margin-bottom: .75rem; font-size: 1.1rem; font-weight: 700; color: var(--text); }
+.rq-opt {
+  display: flex; align-items: flex-start; gap: .65rem;
+  margin: .5rem 0; padding: .7rem .85rem;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text); cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.rq-opt:hover { border-color: var(--accent); background: var(--accent-soft); }
+.rq-opt input { margin-top: .2rem; accent-color: var(--accent); }
+.rq-text { flex: 1; }
+.rq-tag { font-size: .78rem; font-weight: 700; white-space: nowrap; }
+
+/* after answering: options are locked and coloured */
+.rq-opt:has(input:disabled) { cursor: default; }
+.rq-opt:not(.correct):not(.wrong):has(input:disabled):hover { background: var(--surface); border-color: var(--border); }
+.rq-opt.correct, .rq-opt.correct:hover { border-color: var(--success); background: var(--success-soft); }
+.rq-opt.correct .rq-tag { color: var(--success); }
+.rq-opt.wrong, .rq-opt.wrong:hover { border-color: var(--danger); background: var(--danger-soft); }
+.rq-opt.wrong .rq-tag { color: var(--danger); }
+
+.rq-feedback { min-height: 1.5rem; margin-top: .75rem; }
+.rq-feedback p { margin: .25rem 0; }
+.rq-good { color: #15803d; font-weight: 700; }
+.rq-bad { color: #b91c1c; font-weight: 700; }
+.rq-explain { color: var(--muted); }
+
+.rq-actions { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; margin-top: 1rem; }
+.rq-link { padding: 0; border: 0; background: none; color: var(--muted); font: inherit; text-decoration: underline; cursor: pointer; }
+.rq-link:hover { color: var(--text); }
+
+.rq-final { margin: .25rem 0; font-size: 2rem; font-weight: 800; }
+.rq-final span { font-size: 1.1rem; font-weight: 600; color: var(--muted); }
+.rq-review-title { margin: 1.25rem 0 .5rem; font-size: 1rem; }
+.rq-review { margin: .6rem 0; padding: .8rem; border-radius: 8px; background: var(--surface-2); color: var(--text); }
+.rq-review p { margin: .25rem 0; }
+.rq-review-q { font-weight: 700; }

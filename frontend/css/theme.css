@@ -155,6 +155,12 @@
 [data-theme="dark"] .quiz-fail { color: #fca5a5; }
 [data-theme="dark"] .quiz-review-question { background: var(--surface-2); color: var(--text); }
 
+/* roadmap practice quiz */
+[data-theme="dark"] .rq-good { color: #86efac; }
+[data-theme="dark"] .rq-bad { color: #fca5a5; }
+[data-theme="dark"] .rq-opt.correct .rq-tag { color: #86efac; }
+[data-theme="dark"] .rq-opt.wrong .rq-tag { color: #fca5a5; }
+
 /* roadmap diagram: yellow boxes keep their dark text; just make the check circle blend in */
 [data-theme="dark"] .rm-edge { stroke: #8b93ff; }
 [data-theme="dark"] .rm-check:hover circle,

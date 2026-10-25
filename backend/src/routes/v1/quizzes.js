@@ -52,6 +52,109 @@ router.get('/', (req, res) => {
   res.json({ quizzes: query.all(sql, ...params) });
 });
 
+/* ------------------------------------------------------------------ *
+ * Roadmap practice quiz (random questions across the WHOLE roadmap)  *
+ *   - no login needed, nothing is stored (practice mode)             *
+ *   - /random never sends the correct answers                        *
+ *   - /check reveals the right answer for ONE question, after the    *
+ *     learner has picked an option                                   *
+ * These two routes must stay ABOVE '/:id' (otherwise "random" is     *
+ * treated as a quiz id).                                             *
+ * ------------------------------------------------------------------ */
+const randomSchema = Joi.object({
+  roadmap: Joi.string().pattern(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80).required(),
+  count: Joi.number().integer().min(1).max(30).default(10),
+});
+
+const checkSchema = Joi.object({
+  questionId: Joi.number().integer().positive().required(),
+  optionId: Joi.number().integer().positive().required(),
+});
+
+function shuffle(list) {
+  const a = [...list];
+  for (let i = a.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* GET /api/v1/quizzes/random?roadmap=frontend&count=10 */
+router.get('/random', validate({ query: randomSchema }), (req, res) => {
+  const { roadmap, count } = res.locals.validatedQuery;
+
+  const { n: available } = query.get(
+    `SELECT COUNT(*) AS n
+       FROM quiz_questions z
+       JOIN quizzes q ON q.id = z.quiz_id
+      WHERE q.is_active = 1 AND q.roadmap_slug = ?`,
+    roadmap,
+  );
+
+  const picked = query.all(
+    `SELECT z.id, z.question_text, q.topic_key, t.label AS topic_label
+       FROM quiz_questions z
+       JOIN quizzes q ON q.id = z.quiz_id
+       LEFT JOIN roadmap_topics t
+              ON t.roadmap_slug = q.roadmap_slug AND t.topic_key = q.topic_key
+      WHERE q.is_active = 1 AND q.roadmap_slug = ?
+      ORDER BY RANDOM()
+      LIMIT ?`,
+    roadmap,
+    count,
+  );
+
+  const questions = picked.map((question) => ({
+    ...question,
+    options: shuffle(
+      query.all(
+        'SELECT id, option_text FROM quiz_options WHERE question_id = ?',
+        question.id,
+      ),
+    ),
+  }));
+
+  res.json({ roadmap, available, questions });
+});
+
+/* POST /api/v1/quizzes/check  { questionId, optionId } */
+router.post('/check', validate({ body: checkSchema }), (req, res) => {
+  const { questionId, optionId } = req.body;
+
+  const question = query.get(
+    `SELECT z.id, z.explanation
+       FROM quiz_questions z
+       JOIN quizzes q ON q.id = z.quiz_id
+      WHERE z.id = ? AND q.is_active = 1`,
+    questionId,
+  );
+  if (!question) {
+    throw ApiError.notFound('question_not_found', 'Question not found');
+  }
+
+  const chosen = query.get(
+    'SELECT id FROM quiz_options WHERE id = ? AND question_id = ?',
+    optionId,
+    questionId,
+  );
+  if (!chosen) {
+    throw ApiError.badRequest('invalid_option', 'That option does not belong to this question');
+  }
+
+  const correct = query.get(
+    'SELECT id, option_text FROM quiz_options WHERE question_id = ? AND is_correct = 1',
+    questionId,
+  );
+
+  res.json({
+    correct: correct.id === optionId,
+    correctOptionId: correct.id,
+    correctOptionText: correct.option_text,
+    explanation: question.explanation || null,
+  });
+});
+
 /* GET /api/v1/quizzes/:id - questions without correct answers */
 router.get('/:id', validate({ params: idSchema }), (req, res) => {
   const quizId = Number(req.params.id);

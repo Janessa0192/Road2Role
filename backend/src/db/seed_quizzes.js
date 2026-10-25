@@ -1,4 +1,5 @@
 import { query } from './index.js';
+import { EXTRA_QUIZZES } from './quiz_bank.js';
 
 /**
  * Sample topic-wise MCQ quizzes (frontend roadmap). Add more entries to this
@@ -202,7 +203,7 @@ export const QUIZZES = [
   },
 ];
 
-export function seedQuizzes(quizzes = QUIZZES) {
+export function seedQuizzes(quizzes = [...QUIZZES, ...EXTRA_QUIZZES]) {
   let quizCount = 0;
   let questionCount = 0;
 

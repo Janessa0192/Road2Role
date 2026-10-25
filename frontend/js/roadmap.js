@@ -3,6 +3,7 @@ import { authStore, loadAuth, showError } from './state.js';
 import { escapeHtml, getParams } from './util.js';
 import { mountRoadmap } from './roadmap-viewer.js';
 import { renderResources } from './roadmap-resources.js';
+import { mountRoadmapQuiz } from './roadmap-quiz.js';
 import './nav.js';
 
 const $ = (sel) => document.querySelector(sel);
@@ -176,6 +177,7 @@ async function init() {
     renderHeader(roadmap);
     statusEl.hidden = true;
     rootEl.hidden = false;
+    mountRoadmapQuiz($('[data-quiz-section]'), slug); // practice quiz under the progress bar
 
     let layout = null;
     try {
