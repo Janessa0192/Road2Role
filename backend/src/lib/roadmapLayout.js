@@ -1,4 +1,10 @@
 // Converts a roadmap.sh (Balsamiq) export into { width, height, nodes, edges, topics }.
+// Last-resort label when a box has no text: "100-pwa:web-sockets" -> "Web Sockets"
+function prettyFromKey(key) {
+  const tail = String(key).split(':').pop().replace(/@.*$/, '').replace(/^\d+-/, '');
+  return tail.split('-').filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1)).join(' ') || String(key);
+}
+
 export function convertLayout(raw) {
   const m = raw && raw.mockup;
   if (!m || !m.controls) throw new Error('not a Balsamiq roadmap export (no mockup.controls)');
@@ -11,7 +17,7 @@ export function convertLayout(raw) {
       if (c.typeID === '__group__') {
         const kids = c.children?.controls?.control || [];
         flat.push({ kind: 'group', name: p.controlName || '', x, y, w: +c.w, h: +c.h,
-          labels: kids.filter(k => k.typeID === 'Label').map(k => k.properties.text) });
+          labels: kids.filter(k => k.typeID === 'Label' || k.typeID === 'TextInput').map(k => k.properties.text).filter(Boolean) });
       } else if (c.typeID === 'Label') {
         flat.push({ kind: 'label', text: p.text, size: +(p.size || 16), x, y, w: +c.measuredW, h: +c.measuredH });
       } else if (c.typeID === 'TextArea') {
@@ -29,7 +35,7 @@ export function convertLayout(raw) {
   const checks = new Set(groups.filter(g => g.name.startsWith('check:')).map(g => g.name.slice(6)));
   const topicGroups = groups.filter(g => g.name && !g.name.startsWith('check:') && !g.name.startsWith('ext_link:'));
   const topics = Object.fromEntries(topicGroups.map(g => [g.name, {
-    key: g.name, title: g.labels[0] || g.name, description: '', resources: [] }]));
+    key: g.name, title: String(g.labels[0] || '').replace(/\{color(?::[^}]*)?\}/gi, '').trim() || prettyFromKey(g.name), description: '', resources: [] }]));
 
   // Attach each resource link to the closest topic above it in the same column
   let orphans = 0;

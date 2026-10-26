@@ -21,7 +21,6 @@ export const SLUG_META = {
   'game-developer': ['role', 'intermediate', 'games'],
   'server-side-game-developer': ['role', 'advanced', 'games'],
   'data-analyst': ['role', 'beginner', 'data'],
-  'ai-data-scientist': ['role', 'advanced', 'data'],
   'cyber-security': ['role', 'intermediate', 'security'],
   'qa': ['role', 'beginner', 'quality'],
   'ux-design': ['role', 'beginner', 'design'],
@@ -225,7 +224,9 @@ export function seedLayouts({ force = false } = {}) {
   let added = 0;
   query.tx(() => {
     for (const row of getDb().prepare('SELECT slug, layout_json FROM roadmaps').all()) {
-      if (row.layout_json && !force) continue;
+      // Re-convert layouts that still show raw keys (e.g. "100-progressive-web-apps:storage") as box labels
+      const staleLabels = row.layout_json && /"label":"\d+-[a-z0-9-]+:|"title":"[^"]*\{color/i.test(row.layout_json);
+      if (row.layout_json && !force && !staleLabels) continue;
       const file = path.join(dataDir, row.slug, `${row.slug}.json`);
       const raw = readMarkdownIfExists(file);
       if (!raw) continue;
@@ -277,9 +278,34 @@ export function seedAdmin() {
   return res.lastInsertRowid;
 }
 
+/**
+ * Removes roadmaps from the database whose folder no longer exists in src/data/roadmaps.
+ * Deleting a roadmap row cascades to its topics, articles, resources, quizzes and progress.
+ * Safe-guard: does nothing if the data folder is missing or empty (so a wrong path can't wipe the DB).
+ */
+export function pruneRemovedRoadmaps() {
+  const dataDir = config.roadmapsDataDir;
+  if (!fs.existsSync(dataDir)) return { pruned: [] };
+  const folders = new Set(
+    fs.readdirSync(dataDir, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name),
+  );
+  if (folders.size === 0) return { pruned: [] };
+  const pruned = [];
+  query.tx(() => {
+    for (const { slug } of getDb().prepare('SELECT slug FROM roadmaps').all()) {
+      if (folders.has(slug)) continue;
+      query.run('DELETE FROM roadmaps WHERE slug = ?', slug);
+      pruned.push(slug);
+    }
+  });
+  if (pruned.length) console.log(`[seed] removed roadmaps with no folder: ${pruned.join(', ')}`);
+  return { pruned };
+}
+
 export function runSeed({ force = false } = {}) {
   migrate();
   getDb();
+  pruneRemovedRoadmaps(); // folder deleted -> roadmap removed from the DB
   const stats = seedRoadmaps({ force });
   const layoutStats = seedLayouts({ force });
   const resources = seedResources(); // YouTube + article links extracted from the content

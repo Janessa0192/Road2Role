@@ -1,5 +1,4 @@
 // Central registry for one quiz seed file per roadmap.
-import quiz_ai_data_scientist from './ai-data-scientist.js';
 import quiz_android from './android.js';
 import quiz_angular from './angular.js';
 import quiz_aspnet_core from './aspnet-core.js';
@@ -46,7 +45,6 @@ import quiz_ux_design from './ux-design.js';
 import quiz_vue from './vue.js';
 
 export const ROADMAP_QUIZZES = [
-  quiz_ai_data_scientist,
   quiz_android,
   quiz_angular,
   quiz_aspnet_core,
