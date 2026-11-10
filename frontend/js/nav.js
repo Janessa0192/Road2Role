@@ -2,6 +2,29 @@ import { api } from './api.js';
 import { authStore, loadAuth, showError } from './state.js';
 import { escapeHtml } from './util.js';
 
+/* ---- the one shared navbar: every page just has <header class="r2r-header" data-site-header></header> ---- */
+const HEADER_HTML = `
+  <div class="r2r-header__inner">
+    <a class="r2r-brand" href="/index.html" aria-label="Road2Role home">
+      <img class="r2r-brand-logo" src="/assets/Logo.png" alt="Road2Role — Pathways to Career Success" />
+    </a>
+    <button class="r2r-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Toggle menu">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+    <nav class="r2r-nav" id="site-nav" aria-label="Main">
+      <a class="r2r-link" href="/index.html">Home</a>
+      <a class="r2r-link" href="/index.html#roadmaps">Roadmaps</a>
+      <span data-auth-area></span>
+    </nav>
+  </div>`;
+
+function mountHeader() {
+  const header = document.querySelector('[data-site-header]');
+  if (!header) return;
+  header.classList.add('r2r-header');
+  header.innerHTML = HEADER_HTML;
+}
+
 function currentPage() {
   const path = location.pathname.split('/').pop() || 'index.html';
   return path === '' ? 'index.html' : path;
@@ -41,19 +64,19 @@ function renderNav(state) {
   if (!mount) return;
 
   if (!state.loaded) {
-    mount.innerHTML = '<span class="nav-link" aria-hidden="true">…</span>';
+    mount.innerHTML = '<span class="r2r-link" aria-hidden="true">…</span>';
     return;
   }
 
   if (state.user) {
     const initial = escapeHtml((state.user.username || '?').charAt(0).toUpperCase());
-    const adminLink = state.user.role === 'admin' ? '<a class="nav-link" href="/admin.html">Admin</a>' : '';
+    const adminLink = state.user.role === 'admin' ? '<a class="r2r-link" href="/admin.html">Admin</a>' : '';
     mount.innerHTML = `
       ${adminLink}
       ${streakPillHtml()}
-      <a class="nav-link" href="/account.html">Hello, ${escapeHtml(state.user.username)}</a>
-      <a class="nav-link" href="/account.html" aria-label="Your account, avatar ${initial}">${initial}</a>
-      <button class="btn btn-sm" type="button" data-logout>Log out</button>
+      <a class="r2r-link" href="/account.html">Hello, ${escapeHtml(state.user.username)}</a>
+      <a class="r2r-link" href="/account.html" aria-label="Your account, avatar ${initial}">${initial}</a>
+      <button class="r2r-btn" type="button" data-logout>Log out</button>
     `;
     const logoutBtn = mount.querySelector('[data-logout]');
     logoutBtn?.addEventListener('click', async () => {
@@ -72,14 +95,14 @@ function renderNav(state) {
     });
   } else {
     mount.innerHTML = `
-      <a class="nav-link" href="/login.html">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/register.html">Sign up</a>
+      <a class="r2r-link" href="/login.html">Sign in</a>
+      <a class="r2r-btn r2r-btn--primary" href="/register.html">Sign up</a>
     `;
   }
 
   // mark the active page for screen readers + visuals
   const page = currentPage();
-  for (const link of document.querySelectorAll('.nav-link, .brand')) {
+  for (const link of document.querySelectorAll('.r2r-link, .r2r-brand')) {
     const href = link.getAttribute('href');
     if (!href) continue;
     const target = href.split('/').pop();
@@ -87,6 +110,8 @@ function renderNav(state) {
     else link.removeAttribute('aria-current');
   }
 }
+
+mountHeader(); // must run before the first renderNav()
 
 authStore.subscribe((state) => {
   renderNav(state);
@@ -104,27 +129,19 @@ authStore.subscribe((state) => {
 document.addEventListener('progress-changed', refreshStreak);
 document.addEventListener('streak-refresh', refreshStreak);
 
-/** Mobile menu: injects a hamburger button in front of the nav (CSS shows it only on small screens). */
+/** Mobile menu: wires up the hamburger button that is part of the shared header (CSS shows it only on small screens). */
 function setupMenuToggle() {
-  const header = document.querySelector('.site-header');
-  const nav = header?.querySelector('.site-nav');
-  if (!header || !nav || header.querySelector('.nav-toggle')) return;
-  if (!nav.id) nav.id = 'site-nav';
-
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'nav-toggle';
-  btn.setAttribute('aria-controls', nav.id);
-  btn.setAttribute('aria-expanded', 'false');
-  btn.setAttribute('aria-label', 'Toggle menu');
-  btn.innerHTML = '<span class="bar"></span><span class="bar"></span><span class="bar"></span>';
-  nav.before(btn);
+  const header = document.querySelector('.r2r-header');
+  const btn = header?.querySelector('.r2r-toggle');
+  const nav = header?.querySelector('.r2r-nav');
+  if (!header || !btn || !nav || btn.dataset.bound) return;
+  btn.dataset.bound = '1';
 
   const setOpen = (open) => {
-    header.classList.toggle('nav-open', open);
+    header.classList.toggle('is-open', open);
     btn.setAttribute('aria-expanded', String(open));
   };
-  btn.addEventListener('click', () => setOpen(!header.classList.contains('nav-open')));
+  btn.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
   nav.addEventListener('click', (event) => {
     if (event.target.closest('a')) setOpen(false);
   });

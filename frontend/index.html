@@ -7,84 +7,89 @@
   <meta name="description" content="Road2Role: explore career roadmaps, learn step by step, track your progress and get job-ready." />
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="stylesheet" href="/css/theme.css" />
+  <link rel="stylesheet" href="/css/home-redesign.css" />
+  <link rel="stylesheet" href="/css/navbar.css" />
   <script src="/js/theme.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header">
-    <div class="container">
-      <a class="brand" href="/index.html" aria-label="Road2Role home">
-        <svg class="brand-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 7 3 14.5 20 22l17-7.5L20 7Z" fill="currentColor"/><path d="M10 19v7c0 2.6 4.5 5 10 5s10-2.4 10-5v-7l-10 4.4L10 19Z" fill="currentColor" opacity=".75"/><path d="M36 15.5V26" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
-        <span class="brand-text">Road2Role</span>
-      </a>
-      <nav class="site-nav" aria-label="Main">
-        <a class="nav-link" href="/index.html">Home</a>
-        <a class="nav-link" href="/index.html#roadmaps">Roadmaps</a>
-        
-        <span data-auth-area></span>
-      </nav>
-    </div>
-  </header>
+  <header class="r2r-header" data-site-header></header>
 
-  <main id="main" class="container">
+  <main id="main" class="container page-shell">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <span class="eyebrow">🚀 Learn · Build · Get Hired</span>
-        <h1 id="hero-title">Your Roadmap<br />to <span class="accent">Dream Role</span></h1>
-        <p>
-          Explore career roadmaps, learn in a structured way and track your progress
-          step by step — all in one place.
-        </p>
+        <span class="eyebrow"><span class="eyebrow-dot"></span>Navigate Your Career with Confidence</span>
+        <h1 id="hero-title">Your<br /> <span class="accent">Road2Role</span></h1>
+        <p>Explore career roadmaps, learn in a structured way and track your progress step by step — all in one place.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary btn-lg" href="#roadmaps">Explore Roadmaps →</a>
-          <a class="btn btn-lg" href="/register.html">Create free account</a>
+          <a class="btn btn-primary btn-lg" href="#roadmaps">Explore Roadmaps <span aria-hidden="true">↗</span></a>
+          <a class="btn btn-lg btn-outline" href="/register.html">Create free account</a>
+        </div>
+        <div class="hero-proof">
+          <span class="proof-avatars" aria-hidden="true"><i>✦</i><i>↗</i><i>✓</i></span>
+          <span>Small steps today. Big opportunities tomorrow.</span>
         </div>
       </div>
 
       <div class="hero-visual" aria-hidden="true">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <span class="float-icon book-icon">▤</span>
+        <span class="float-icon compass-icon">✥</span>
+        <span class="float-icon spark-icon">✳</span>
         <div class="mock-card">
           <div class="mock-head">
-            <span>Road2Role</span>
-            <span class="mock-bars"><i style="height:9px"></i><i style="height:14px"></i><i style="height:22px"></i></span>
+            <span class="mock-brand">Your journey</span>
+            <span class="mock-tag">ON TRACK</span>
           </div>
+          <p class="mock-subtitle">A little progress every day adds up.</p>
           <ul class="mock-steps">
-            <li class="done">Choose a Roadmap</li>
-            <li class="done">Learn Step by Step</li>
-            <li class="done">Track Your Progress</li>
-            <li class="done">Test Yourself</li>
-            <li class="done">Get Job Ready</li>
+            <li class="done"><span class="step-check">✓</span><span>Choose a Roadmap</span><b>01</b></li>
+            <li class="done"><span class="step-check">✓</span><span>Learn Step by Step</span><b>02</b></li>
+            <li class="done"><span class="step-check">✓</span><span>Track Your Progress</span><b>03</b></li>
+            <li class="done"><span class="step-check">✓</span><span>Test Yourself</span><b>04</b></li>
+            <li><span class="step-check">5</span><span>Get Job Ready</span><b>05</b></li>
           </ul>
           <div class="mock-progress">
-            <div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div>
-            <small>100% complete</small>
+            <div class="progress-meta" style="color: black;"><span>YOUR MOMENTUM</span><strong>80%</strong></div>
+            <div class="progress-track"><div class="progress-fill" style="width:80%"></div></div>
+            <small style="color: black;">Keep going — you're doing great!</small>
           </div>
         </div>
-        <div class="sticky s1">Plan<br />Learn<br />Practice<br />Grow</div>
-        <div class="sticky s2">Small Steps,<br />Big Opportunities ♡</div>
-        <div class="sticky s3">You<br />Got<br />This ♡</div>
+        <div class="sticky s1">PLAN<br />LEARN<br />PRACTICE<br />GROW</div>
+        <div class="sticky s2">Small steps,<br />big opportunities <span>♡</span></div>
+        <div class="sticky s3">YOU<br />GOT<br />THIS <span>✦</span></div>
+        <div class="route-line"></div>
       </div>
     </section>
 
     <section class="feature-strip" aria-label="Why Road2Role">
-      <div class="feature">
-        <span class="f-icon" aria-hidden="true">🗺️</span>
+      <article class="feature feature-lilac">
+        <span class="f-icon" aria-hidden="true">⌘</span>
         <div><h3>Structured Roadmaps</h3><p>Follow step-by-step learning paths for your dream role.</p></div>
-      </div>
-      <div class="feature">
-        <span class="f-icon" aria-hidden="true">📈</span>
+        <span class="feature-arrow" aria-hidden="true">↗</span>
+      </article>
+      <article class="feature feature-mint">
+        <span class="f-icon" aria-hidden="true">↗</span>
         <div><h3>Track Your Progress</h3><p>Mark topics as done, stay consistent and see your growth.</p></div>
-      </div>
-      <div class="feature">
-        <span class="f-icon" aria-hidden="true">📚</span>
+        <span class="feature-arrow" aria-hidden="true">↗</span>
+      </article>
+      <article class="feature feature-sand">
+        <span class="f-icon" aria-hidden="true">▤</span>
         <div><h3>Curated Resources</h3><p>Articles and videos for every topic, right where you need them.</p></div>
-      </div>
+        <span class="feature-arrow" aria-hidden="true">↗</span>
+      </article>
     </section>
 
-    <section id="roadmaps" aria-labelledby="browse-title" style="scroll-margin-top: 90px;">
+    <section id="roadmaps" class="roadmaps-section" aria-labelledby="browse-title" style="scroll-margin-top: 100px;">
       <div class="section-head">
-        <h2 id="browse-title">Browse Roadmaps</h2>
-        <p>Pick a path, learn step by step and get job-ready.</p>
+        <div>
+          <span class="section-kicker">FIND YOUR DIRECTION</span>
+          <h2 id="browse-title">Browse <span>Roadmaps</span></h2>
+          <p>Pick a path, learn step by step and get job-ready.</p>
+        </div>
+        <div class="section-note"><span>✦</span> Your next chapter starts here</div>
       </div>
 
       <div class="toolbar">
@@ -93,7 +98,6 @@
           <label class="visually-hidden" for="search">Search roadmaps</label>
           <input id="search" type="search" placeholder="Search roadmaps… (e.g. react, devops)" autocomplete="off" />
         </div>
-
         <label class="visually-hidden" for="difficulty">Difficulty</label>
         <select id="difficulty">
           <option value="">Any difficulty</option>
@@ -101,7 +105,6 @@
           <option value="intermediate">Intermediate</option>
           <option value="advanced">Advanced</option>
         </select>
-
         <label class="visually-hidden" for="sort">Sort by</label>
         <select id="sort">
           <option value="order">Most popular</option>
@@ -113,7 +116,7 @@
       </div>
 
       <div class="chip-row" role="group" aria-label="Filter by category" data-chips>
-        <button class="chip" type="button" data-category="" aria-pressed="true">All</button>
+        <button class="chip" type="button" data-category="" aria-pressed="true">All paths</button>
         <button class="chip" type="button" data-category="role" aria-pressed="false">Roles</button>
         <button class="chip" type="button" data-category="language" aria-pressed="false">Languages</button>
         <button class="chip" type="button" data-category="framework" aria-pressed="false">Frameworks</button>
@@ -123,7 +126,6 @@
       </div>
 
       <p class="status-line" role="status" aria-live="polite" data-status>Loading roadmaps…</p>
-
       <div class="grid" data-grid hidden></div>
 
       <nav class="pager" aria-label="Pagination" data-pager hidden>
@@ -135,8 +137,10 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <span><span class="brand-line">Road2Role</span> · Learn, build, get hired.</span>
+    <div class="container footer-inner">
+      <span class="footer-brand">Road2Role</span>
+      <span>Learn with direction. Grow with confidence.</span>
+      <a href="#main">Back to top ↑</a>
     </div>
   </footer>
 

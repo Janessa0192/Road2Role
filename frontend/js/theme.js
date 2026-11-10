@@ -36,7 +36,7 @@
 
   // 2) add the button to the navbar once the DOM exists
   document.addEventListener('DOMContentLoaded', function () {
-    var nav = document.querySelector('.site-nav');
+    var nav = document.querySelector('.r2r-nav');
     if (!nav || nav.querySelector('.theme-toggle')) return;
 
     var btn = document.createElement('button');
