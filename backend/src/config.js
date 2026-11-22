@@ -19,6 +19,14 @@ try {
 }
 
 const isTest = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true';
+const aiProvider = process.env.AI_PROVIDER || (
+  process.env.GROQ_API_KEY ? 'groq' : process.env.GEMINI_API_KEY ? 'gemini' : 'anthropic'
+);
+const aiModel = process.env.AI_MODEL || ({
+  groq: 'openai/gpt-oss-20b',
+  gemini: 'gemini-flash-latest',
+  anthropic: 'claude-sonnet-5-5',
+}[aiProvider] || 'gemini-flash-latest');
 
 const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
@@ -50,6 +58,18 @@ const config = {
   // Cache TTLs (seconds)
   cacheListTtl: Number(process.env.CACHE_LIST_TTL || 60),
   cacheDetailTtl: Number(process.env.CACHE_DETAIL_TTL || 300),
+
+  // AI (voice teacher now, quiz chatbot next). Without a key the teacher still works in
+  // "basic" mode (reads the topic text aloud); with a key it explains in simple words.
+  // Provider order: explicit AI_PROVIDER, otherwise Groq, Gemini, then Anthropic.
+  groqApiKey: process.env.GROQ_API_KEY || '',
+  geminiApiKey: process.env.GEMINI_API_KEY || '',
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY || '',
+  aiProvider,
+  aiModel,
+  aiTimeoutMs: Number(process.env.AI_TIMEOUT_MS || 30_000),
+  teacherRateLimitMax: Number(process.env.TEACHER_RATE_LIMIT_MAX || 20), // per minute per IP
+  teacherLessonTtl: Number(process.env.TEACHER_LESSON_TTL || 24 * 3600), // seconds a generated lesson is cached
 
   // Bootstrap admin (created only when the users table is empty)
   adminEmail: process.env.ADMIN_EMAIL || 'admin@roadmap.local',

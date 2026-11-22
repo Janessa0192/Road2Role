@@ -1,0 +1,85 @@
+/* Voice teacher (frontend/components/VoiceTeacher). Uses the same theme variables as the rest of the roadmap page. */
+.vt-section { margin: 2rem 0; }
+.vt-card {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.vt-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.vt-title { margin: 0 0 .25rem; font-size: 1.3rem; }
+.vt-sub { margin: 0 0 1rem; color: var(--muted); }
+.vt-pill {
+  flex: none; padding: .2rem .7rem; border-radius: 999px; font-size: .78rem; font-weight: 700;
+  background: var(--surface-2); color: var(--muted);
+}
+.vt-pill.live { background: var(--accent-soft); color: var(--accent-strong); animation: vt-pulse 1.4s ease-in-out infinite; }
+@keyframes vt-pulse { 50% { opacity: .55; } }
+
+.vt-row { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: flex-end; }
+.vt-field { display: flex; flex-direction: column; gap: .25rem; font-size: .8rem; font-weight: 600; color: var(--muted); }
+.vt-grow { flex: 1 1 220px; min-width: 0; }
+.vt-field select, .vt-type input {
+  padding: .5rem .6rem; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); color: var(--text); font: inherit; font-weight: 400; max-width: 100%;
+}
+
+.vt-stage {
+  margin: 1rem 0; padding: 1rem 1.1rem; border-radius: 10px; background: var(--surface-2); min-height: 7rem;
+}
+.vt-topic { margin: 0 0 .4rem; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.vt-caption { margin: 0; font-size: 1.15rem; line-height: 1.6; color: var(--text); }
+.vt-caption.empty { color: var(--muted); font-size: 1rem; }
+.vt-bar { height: 6px; margin-top: .9rem; border-radius: 999px; background: var(--border); overflow: hidden; }
+.vt-bar-fill { height: 100%; background: var(--accent); transition: width .3s; }
+
+.vt-controls { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.vt-btn {
+  min-width: 2.5rem; padding: .5rem .7rem; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); color: var(--text); font: inherit; cursor: pointer;
+}
+.vt-btn.wide { padding: .5rem .9rem; font-weight: 600; }
+.vt-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.vt-btn:disabled, .vt-mic:disabled { opacity: .5; cursor: not-allowed; }
+
+.vt-done {
+  margin-top: 1rem; padding: .9rem 1rem; border-radius: 10px;
+  background: var(--success-soft); color: var(--text);
+}
+.vt-done-actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: .6rem; }
+.vt-ok { font-weight: 700; color: var(--success); }
+
+.vt-ask { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px dashed var(--border); }
+.vt-ask-row { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+.vt-mic {
+  padding: .6rem 1rem; border: 2px solid var(--accent); border-radius: 999px;
+  background: var(--surface); color: var(--accent-strong); font: inherit; font-weight: 700; cursor: pointer;
+}
+.vt-mic:hover:not(:disabled) { background: var(--accent-soft); }
+.vt-mic.on { background: var(--accent); color: #fff; animation: vt-pulse 1.2s ease-in-out infinite; }
+.vt-type { display: flex; gap: .5rem; flex: 1 1 260px; min-width: 0; }
+.vt-type input { flex: 1; min-width: 0; }
+.vt-heard { margin: .6rem 0 0; font-style: italic; color: var(--muted); }
+
+.vt-chat { list-style: none; margin: .9rem 0 0; padding: 0; display: grid; gap: .5rem; }
+.vt-chat li { padding: .6rem .8rem; border-radius: 8px; background: var(--surface-2); line-height: 1.55; }
+.vt-chat li.user { background: var(--accent-soft); }
+
+.vt-transcript { margin-top: 1rem; }
+.vt-transcript summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
+.vt-transcript ol { margin: .6rem 0 0; padding-left: 1.3rem; display: grid; gap: .35rem; }
+.vt-transcript li button {
+  padding: 0; border: 0; background: none; color: var(--text); font: inherit; text-align: left; line-height: 1.5; cursor: pointer;
+}
+.vt-transcript li button:hover { text-decoration: underline; }
+.vt-transcript li.now button { font-weight: 700; color: var(--accent-strong); }
+
+@media (max-width: 560px) {
+  .vt-head { flex-direction: column; }
+  .vt-caption { font-size: 1.05rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vt-pill.live, .vt-mic.on { animation: none; }
+}
