@@ -82,10 +82,96 @@ async function request(method, path, { body, query, headers } = {}) {
   return payload;
 }
 
+async function* streamRequest(path, { method = 'GET', body, query, headers, signal } = {}) {
+  let url = BASE + path;
+  if (query) {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(query)) {
+      if (value !== undefined && value !== null && value !== '') params.set(key, value);
+    }
+    const qs = params.toString();
+    if (qs) url += `?${qs}`;
+  }
+
+  const init = {
+    method,
+    credentials: 'same-origin',
+    signal,
+    headers: {
+      Accept: 'application/x-ndjson',
+      'X-Timezone': TIME_ZONE,
+      ...(headers || {}),
+    },
+  };
+  if (body !== undefined) {
+    init.headers['Content-Type'] = 'application/json';
+    init.body = JSON.stringify(body);
+  }
+
+  let res;
+  try {
+    res = await fetch(url, init);
+  } catch {
+    if (signal?.aborted) return;
+    throw new ApiError(0, 'network_error', 'Could not reach the server. Check your connection.');
+  }
+
+  if (!res.ok) {
+    let payload = null;
+    try {
+      payload = await res.json();
+    } catch {
+      /* non-JSON error body */
+    }
+    const err = payload && payload.error;
+    throw new ApiError(
+      res.status,
+      (err && err.code) || `http_${res.status}`,
+      (err && err.message) || `Request failed with status ${res.status}`,
+      (err && err.details) || [],
+    );
+  }
+  if (!res.body) throw new ApiError(502, 'stream_unavailable', 'The server did not start a response stream.');
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      buffer += decoder.decode(value, { stream: !done });
+      const lines = buffer.split(/\r?\n/);
+      buffer = lines.pop() || '';
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        const event = JSON.parse(line);
+        if (event.type === 'error') {
+          throw new ApiError(res.status, event.code, event.message);
+        }
+        yield event;
+      }
+      if (done) break;
+    }
+    if (buffer.trim()) {
+      const event = JSON.parse(buffer);
+      if (event.type === 'error') throw new ApiError(res.status, event.code, event.message);
+      yield event;
+    }
+  } finally {
+    try {
+      await reader.cancel();
+    } catch {
+      /* stream already closed */
+    }
+    reader.releaseLock();
+  }
+}
+
 export const api = {
   get: (path, opts) => request('GET', path, opts),
   post: (path, body, opts) => request('POST', path, { ...opts, body }),
   put: (path, body, opts) => request('PUT', path, { ...opts, body }),
   patch: (path, body, opts) => request('PATCH', path, { ...opts, body }),
   del: (path, opts) => request('DELETE', path, opts),
+  stream: streamRequest,
 };

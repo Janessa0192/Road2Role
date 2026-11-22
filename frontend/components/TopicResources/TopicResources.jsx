@@ -4,7 +4,7 @@ import TopicQuizList from '../TopicQuiz/TopicQuizList.jsx';
 const isLinkBox = (key) => String(key).startsWith('json:');
 
 /** Topics in reading order: by section (top to bottom), parents first, then by position. */
-function orderTopics(layout) {
+export function orderTopics(layout) {
   const pos = new Map();
   for (const n of layout.nodes) {
     if (n.type === 'topic' && !isLinkBox(n.key) && !pos.has(n.key)) pos.set(n.key, { x: n.x, y: n.y });

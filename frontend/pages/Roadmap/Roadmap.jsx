@@ -5,11 +5,13 @@ import { useAuth } from '../../AuthContext/AuthContext.jsx';
 import { showError } from '../../utils/errors.js';
 import usePageStyles from '../../hooks/usePageStyles.js';
 import RoadmapViewer from '../../components/RoadmapViewer/RoadmapViewer.jsx';
-import TopicResources from '../../components/TopicResources/TopicResources.jsx';
+import TopicResources, { orderTopics } from '../../components/TopicResources/TopicResources.jsx';
+import VoiceTeacher from '../../components/VoiceTeacher/VoiceTeacher.jsx';
 import RoadmapQuiz from '../../components/TopicQuiz/RoadmapQuiz.jsx';
 import viewerCss from "../../../components/roadmap-viewer.css?inline";
+import teacherCss from "../../../components/voice-teacher.css?inline";
 
-const STYLES = [viewerCss];
+const STYLES = [viewerCss, teacherCss];
 const enc = encodeURIComponent;
 const isLinkBox = (key) => String(key).startsWith('json:');
 
@@ -155,6 +157,12 @@ function RoadmapContent({ slug }) {
     };
   }, [layoutChecked, layout, slug]);
 
+  /* ---- voice teacher topics: same reading order as "Topics & resources" ----------------- */
+  const teacherTopics = useMemo(() => {
+    if (layout) return orderTopics(layout).map((t) => ({ key: t.key, title: t.title }));
+    return fallbackTopics.map((t) => ({ key: t.topic_key, title: t.label }));
+  }, [layout, fallbackTopics]);
+
   /* ---- 4. deep link: /roadmap?slug=x#topic=<key> -------------------------------------- */
   const deepLinked = useRef(false);
   useEffect(() => {
@@ -294,6 +302,19 @@ function RoadmapContent({ slug }) {
               open image
             </a>
           </p>
+        </section>
+      )}
+
+      {/* Voice teacher: explains the topics of this roadmap out loud and answers doubts */}
+      {progressReady && teacherTopics.length > 0 && (
+        <section className="vt-section" aria-label="Voice teacher">
+          <VoiceTeacher
+            slug={slug}
+            topics={teacherTopics}
+            openRequest={openRequest}
+            doneKeys={doneKeys}
+            onMarkDone={userId && layout ? (key) => handleToggleDone(key, true) : undefined}
+          />
         </section>
       )}
 
