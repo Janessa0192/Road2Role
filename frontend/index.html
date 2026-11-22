@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Road2Role - Your Roadmap to Dream Role</title>
+  <meta name="description" content="Road2Role: explore career roadmaps, learn step by step, track your progress and get job-ready." />
+  <link rel="icon" href="/manifest/favicon.ico" />
+  <link rel="apple-touch-icon" href="/manifest/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest/manifest.json" />
+  <script>
+    // Apply the saved theme before first paint (same key/attribute as the old theme.js) -> no flash.
+    (function () {
+      try {
+        document.documentElement.setAttribute(
+          'data-theme',
+          localStorage.getItem('r2r-theme') === 'dark' ? 'dark' : 'light'
+        );
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/main.jsx"></script>
+</body>
+</html>

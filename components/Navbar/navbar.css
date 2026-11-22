@@ -1,0 +1,114 @@
+/* =============================================================
+   Road2Role - shared navbar (one look on every page)
+   Copied from the landing page header. All classes are r2r-*
+   so page stylesheets (account.css, signin.css ...) can't change it.
+   Load this file LAST in every page's <head>.
+   ============================================================= */
+
+.r2r-header,
+.r2r-header *,
+.r2r-header *::before,
+.r2r-header *::after { box-sizing: border-box; }
+
+.r2r-header {
+  position: sticky; top: 0; z-index: 50; flex-shrink: 0;
+  min-height: 81px;                       /* reserve space until nav.js renders the bar */
+  font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; text-align: left;
+  background: rgb(247, 249, 249);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(28, 65, 70, .09);
+  box-shadow: 0 1px 0 var(--border, #e4e7f2);
+}
+.r2r-header__inner {
+  width: min(1180px, calc(100% - 64px)); margin-inline: auto;
+  min-height: 68px; padding-block: 6.4px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;
+}
+
+/* ---- brand ---- */
+.r2r-header .r2r-brand {
+  display: flex; align-items: center; width: 190px; height: 68px; overflow: hidden;
+  text-decoration: none; color: inherit;
+}
+.r2r-header .r2r-brand-logo {
+  width: 110%; height: 180%; object-fit: contain;
+  mix-blend-mode: multiply; margin-top: 12%;
+}
+
+/* ---- nav ---- */
+.r2r-header .r2r-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 30px; margin-left: auto; }
+.r2r-header [data-auth-area] { display: flex; align-items: center; gap: 12px; }
+
+.r2r-header .r2r-link {
+  display: inline-block; padding: 7.2px 13.6px; border-radius: 999px;
+  font-size: 14px; font-weight: 500; text-decoration: none; color: #334155;
+  background: transparent; transition: color .2s, background .2s;
+}
+.r2r-header .r2r-link:hover,
+.r2r-header .r2r-link[aria-current="page"] {
+  color: var(--accent, #4f46e5); background: var(--accent-soft, #eef0ff); text-decoration: none;
+}
+
+.r2r-header .r2r-btn {
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  padding: 9px 16px; border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 1.15;
+  text-decoration: none; color: var(--text, #1b1f3b); background: #fff;
+  border: 1px solid var(--border, #e4e7f2); box-shadow: 0 7px 16px rgba(23, 79, 86, .08);
+}
+.r2r-header .r2r-btn:hover { background: var(--surface-2, #f6f7fc); text-decoration: none; }
+.r2r-header .r2r-btn--primary {
+  padding: 11px 19px; border-radius: 12px; color: #fff; background: #174f56; border-color: #174f56;
+  box-shadow: 0 7px 16px #174f5630;
+}
+.r2r-header .r2r-btn--primary:hover { color: #fff; background: #123f45; }
+.r2r-header .r2r-btn:disabled { opacity: .6; cursor: default; }
+
+/* theme toggle (added by theme.js, styled in theme.css) keeps its own look */
+.r2r-header .theme-toggle { flex: none; }
+
+/* ---- hamburger (only shown on phones) ---- */
+.r2r-header .r2r-toggle { display: none; }
+
+/* ---- phones ---- */
+@media (max-width: 760px) {
+  .r2r-header__inner { min-height: 60px; gap: 8px; padding-block: 8px; }
+  .r2r-header .r2r-toggle {
+    display: inline-flex; flex-direction: column; justify-content: center; gap: 5px;
+    margin-left: auto; width: 44px; height: 44px; padding: 0 11px; cursor: pointer;
+    background: #fff; border: 1px solid var(--border, #e4e7f2); border-radius: 10px;
+  }
+  .r2r-header .r2r-toggle .bar {
+    display: block; height: 2px; background: var(--text, #1b1f3b); border-radius: 2px;
+    transition: transform .2s, opacity .2s;
+  }
+  .r2r-header.is-open .r2r-toggle .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .r2r-header.is-open .r2r-toggle .bar:nth-child(2) { opacity: 0; }
+  .r2r-header.is-open .r2r-toggle .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .r2r-header .r2r-nav {
+    display: none; width: 100%; flex-direction: column; align-items: stretch; gap: 2.4px;
+    padding: 6.4px 0 12.8px; border-top: 1px solid var(--border, #e4e7f2); margin-left: 0;
+  }
+  .r2r-header.is-open .r2r-nav { display: flex; }
+  .r2r-header .r2r-link,
+  .r2r-header .r2r-btn { padding: 12px 14.4px; border-radius: 10px; font-size: 16px; text-align: left; justify-content: flex-start; }
+  .r2r-header [data-auth-area] { flex-direction: column; align-items: stretch; gap: 2.4px; }
+  .r2r-header .r2r-btn { margin-top: 4.8px; }
+  .r2r-header .r2r-btn--primary { justify-content: center; text-align: center; }
+  .r2r-header .r2r-nav a[aria-label^="Your account"] { display: none; } /* avatar duplicates "Hello, name" */
+  .r2r-header .streak-pill { align-self: flex-start; margin: 4.8px 14.4px; }
+  .r2r-header .theme-toggle { align-self: flex-start; margin: 4.8px 14.4px; }
+}
+@media (max-width: 560px) {
+  .r2r-header__inner { width: calc(100% - 30px); }
+  .r2r-header .r2r-brand { width: 135px; height: 57px; }
+}
+
+/* ---- dark theme (needs theme.css / theme.js on the page) ---- */
+[data-theme="dark"] .r2r-header { background: rgba(15, 18, 32, .88); }
+[data-theme="dark"] .r2r-header .r2r-link { color: #cbd2ea; }
+[data-theme="dark"] .r2r-header .r2r-link:hover,
+[data-theme="dark"] .r2r-header .r2r-link[aria-current="page"] { color: var(--accent-strong, #aab1ff); background: var(--accent-soft, #262d5c); }
+[data-theme="dark"] .r2r-header .r2r-btn { color: var(--text, #e8eaf6); background: var(--surface, #1a1f36); border-color: var(--border, #2d3454); box-shadow: none; }
+[data-theme="dark"] .r2r-header .r2r-btn--primary { color: #fff; background: #1f7a82; border-color: #1f7a82; }
+[data-theme="dark"] .r2r-header .r2r-toggle { background: var(--surface, #1a1f36); }

@@ -1,0 +1,497 @@
+/* =========================================================
+   Road2Role — Sign-up (Create account) Page
+   Same blue glass look as the sign-in page, plus:
+   - a "Join Road2Role" brand eyebrow above the title
+   - the page scrolls normally (the form is taller than sign-in)
+   - dark theme support (follows the site's theme toggle)
+   Loaded only while /register is open (see Register.jsx).
+   ========================================================= */
+
+:root {
+  --su-ink: #102747;
+  --su-muted: #4c6380;
+  --su-heading: #102f59;
+  --su-label: #17395f;
+  --su-link: #1458ac;
+  --su-link-hover: #0c3d80;
+  --su-brand: #123f75;
+  --su-accent: #2475df;
+
+  --su-page-bg:
+    radial-gradient(ellipse at 12% 18%, rgba(255, 255, 255, .96), transparent 32rem),
+    radial-gradient(ellipse at 92% 10%, rgba(145, 190, 255, .45), transparent 34rem),
+    radial-gradient(ellipse at 76% 82%, rgba(185, 218, 255, .6), transparent 34rem),
+    linear-gradient(135deg, #f6faff 0%, #eaf2ff 48%, #dceaff 100%);
+  --su-ring: rgba(51, 113, 194, .14);
+  --su-glow: rgba(105, 165, 255, .18);
+
+  --su-card-bg: linear-gradient(145deg, rgba(255, 255, 255, .92), rgba(246, 250, 255, .72));
+  --su-card-border: rgba(255, 255, 255, .9);
+  --su-card-shadow:
+    0 30px 75px rgba(26, 75, 139, .15),
+    0 8px 24px rgba(26, 75, 139, .07),
+    inset 0 1px 0 rgba(255, 255, 255, .98);
+
+  --su-input-bg: rgba(255, 255, 255, .85);
+  --su-input-bg-focus: #fff;
+  --su-input-border: rgba(54, 113, 190, .25);
+  --su-input-border-hover: rgba(39, 105, 190, .48);
+  --su-input-text: #102747;
+  --su-placeholder: #8093ad;
+  --su-focus: #347fe0;
+  --su-focus-ring: rgba(52, 127, 224, .13);
+
+  --su-err-text: #b52e43;
+  --su-alert-err-text: #8f2639;
+  --su-alert-err-bg: rgba(255, 235, 238, .92);
+  --su-alert-err-border: rgba(191, 54, 74, .2);
+
+  --su-foot-bg: rgba(255, 255, 255, .6);
+  --su-foot-border: rgba(58, 111, 183, .13);
+  --su-foot-text: #4c6380;
+}
+
+[data-theme="dark"] {
+  --su-ink: #e6eefc;
+  --su-muted: #9db0cf;
+  --su-heading: #eaf1ff;
+  --su-label: #cfdcf2;
+  --su-link: #8db8ff;
+  --su-link-hover: #b9d3ff;
+  --su-brand: #b9d3ff;
+  --su-accent: #5ca0ff;
+
+  --su-page-bg:
+    radial-gradient(ellipse at 12% 18%, rgba(54, 96, 170, .28), transparent 32rem),
+    radial-gradient(ellipse at 92% 10%, rgba(54, 113, 190, .22), transparent 34rem),
+    radial-gradient(ellipse at 76% 82%, rgba(40, 90, 170, .2), transparent 34rem),
+    linear-gradient(135deg, #0a1020 0%, #0d1730 48%, #112042 100%);
+  --su-ring: rgba(120, 170, 240, .14);
+  --su-glow: rgba(70, 130, 230, .2);
+
+  --su-card-bg: linear-gradient(145deg, rgba(22, 34, 60, .92), rgba(15, 24, 44, .8));
+  --su-card-border: rgba(120, 160, 230, .2);
+  --su-card-shadow:
+    0 30px 75px rgba(0, 0, 0, .45),
+    0 8px 24px rgba(0, 0, 0, .25),
+    inset 0 1px 0 rgba(160, 195, 255, .08);
+
+  --su-input-bg: rgba(9, 16, 32, .65);
+  --su-input-bg-focus: rgba(9, 16, 32, .9);
+  --su-input-border: rgba(120, 160, 230, .28);
+  --su-input-border-hover: rgba(140, 180, 245, .5);
+  --su-input-text: #e6eefc;
+  --su-placeholder: #7186a6;
+  --su-focus: #6aa6ff;
+  --su-focus-ring: rgba(106, 166, 255, .2);
+
+  --su-err-text: #ff9aaa;
+  --su-alert-err-text: #ffb4c0;
+  --su-alert-err-bg: rgba(120, 30, 50, .35);
+  --su-alert-err-border: rgba(255, 130, 150, .3);
+
+  --su-foot-bg: rgba(12, 20, 38, .7);
+  --su-foot-border: rgba(120, 160, 230, .14);
+  --su-foot-text: #9db0cf;
+}
+
+/* ---------- page: soft blue background, footer sticks to the bottom ---------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--su-ink);
+  background: var(--su-page-bg);
+  background-attachment: fixed;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* decorative rings (behind everything) */
+body::before,
+body::after {
+  position: fixed;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+body::before {
+  top: 14%;
+  right: -100px;
+  width: 330px;
+  height: 330px;
+  border: 1px solid var(--su-ring);
+  box-shadow: 0 0 0 24px rgba(51, 113, 194, .035), 0 0 0 54px rgba(51, 113, 194, .025);
+}
+
+body::after {
+  bottom: -140px;
+  left: -100px;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, var(--su-glow), transparent 70%);
+}
+
+/* the React app mounts inside #root: make it a column so the footer sits at the bottom */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#main.container {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding-top: clamp(28px, 5vw, 64px);
+  padding-bottom: clamp(32px, 5vw, 70px);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid #70aaff;
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.skip-link {
+  position: absolute;
+  z-index: 1000;
+  top: 10px;
+  left: 10px;
+  padding: 10px 14px;
+  transform: translateY(-160%);
+  border-radius: 10px;
+  color: #fff;
+  background: #164b96;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ---------- the card ---------- */
+.form-card {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 480px);
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 43px);
+  overflow: hidden;
+  border: 1px solid var(--su-card-border);
+  border-radius: 30px;
+  background: var(--su-card-bg);
+  box-shadow: var(--su-card-shadow);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+}
+
+/* coloured top bar */
+.form-card::before {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 7px;
+  content: "";
+  background: linear-gradient(90deg, #103f84, #2475df 52%, #8dc0ff);
+}
+
+/* decorative ring in the corner */
+.form-card::after {
+  position: absolute;
+  z-index: -1;
+  top: -105px;
+  right: -105px;
+  width: 230px;
+  height: 230px;
+  content: "";
+  border: 1px solid rgba(67, 135, 222, .14);
+  border-radius: 50%;
+  box-shadow: 0 0 0 18px rgba(67, 135, 222, .035), 0 0 0 38px rgba(67, 135, 222, .025);
+  pointer-events: none;
+}
+
+/* "JOIN ROAD2ROLE" brand eyebrow, then the title, then a short accent line */
+.form-card h1 {
+  margin: 0 0 8px;
+  color: var(--su-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.9rem, 5vw, 2.4rem);
+  font-weight: 750;
+  letter-spacing: -.05em;
+  line-height: 1.14;
+}
+
+.form-card h1::before {
+  display: block;
+  margin-bottom: 12px;
+  content: "Join Road2Role";
+  color: var(--su-accent);
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: .76rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.form-card h1::after {
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin-top: 15px;
+  border-radius: 999px;
+  content: "";
+  background: linear-gradient(90deg, #164b96, #5ca0ff);
+}
+
+.form-card > p:not(.alert):not(.form-footer) {
+  color: var(--su-muted);
+}
+
+/* ---------- fields ---------- */
+.field {
+  margin-top: 20px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--su-label);
+  font-size: .93rem;
+  font-weight: 750;
+}
+
+.field input {
+  display: block;
+  width: 100%;
+  min-height: 53px;
+  padding: 13px 15px;
+  border: 1px solid var(--su-input-border);
+  border-radius: 14px;
+  outline: none;
+  color: var(--su-input-text);
+  background: var(--su-input-bg);
+  box-shadow: inset 0 1px 3px rgba(22, 68, 126, .035);
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.field input::placeholder {
+  color: var(--su-placeholder);
+  opacity: 1;
+}
+
+.field input:hover {
+  border-color: var(--su-input-border-hover);
+}
+
+.field input:focus {
+  border-color: var(--su-focus);
+  background: var(--su-input-bg-focus);
+  box-shadow: 0 0 0 4px var(--su-focus-ring), 0 5px 14px rgba(27, 83, 157, .06);
+}
+
+.field input[aria-invalid="true"],
+.field input.invalid {
+  border-color: #cf4055;
+  box-shadow: 0 0 0 3px rgba(207, 64, 85, .12);
+}
+
+/* browser autofill keeps the card's look */
+.field input:-webkit-autofill {
+  -webkit-text-fill-color: var(--su-input-text);
+  box-shadow: 0 0 0 1000px var(--su-input-bg-focus) inset;
+}
+
+/* password rule under the password box */
+.field .hint {
+  margin: 7px 0 0;
+  color: var(--su-muted);
+  font-size: .82rem;
+  line-height: 1.45;
+}
+
+.field-error {
+  min-height: 0;
+  margin: 5px 0 0;
+  color: var(--su-err-text);
+  font-size: .83rem;
+  font-weight: 600;
+}
+
+.field-error:not(:empty) {
+  min-height: 1.2em;
+}
+
+/* ---------- button ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 50px;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-primary {
+  position: relative;
+  margin-top: 26px;
+  border-color: rgba(255, 255, 255, .25);
+  color: #fff;
+  background: linear-gradient(115deg, #123f82 0%, #155bb8 52%, #287ce0 100%);
+  box-shadow: 0 11px 22px rgba(21, 87, 176, .24), inset 0 1px 0 rgba(255, 255, 255, .2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 15px 27px rgba(21, 87, 176, .29), inset 0 1px 0 rgba(255, 255, 255, .24);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 12px rgba(21, 87, 176, .2);
+}
+
+.btn-primary:disabled {
+  cursor: wait;
+  opacity: .72;
+  transform: none;
+}
+
+/* ---------- alerts ---------- */
+.alert {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  font-size: .9rem;
+  line-height: 1.5;
+}
+
+.alert-error {
+  border-color: var(--su-alert-err-border);
+  color: var(--su-alert-err-text);
+  background: var(--su-alert-err-bg);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- "Already registered? Sign in" ---------- */
+.form-footer {
+  margin: 22px 0 0;
+  color: var(--su-muted);
+  font-size: .92rem;
+  text-align: center;
+}
+
+.form-footer a {
+  color: var(--su-link);
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.form-footer a:hover {
+  color: var(--su-link-hover);
+  text-decoration: underline;
+}
+
+/* ---------- footer ---------- */
+.site-footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--su-foot-border);
+  background: var(--su-foot-bg);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.site-footer > .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 72px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: var(--su-foot-text);
+  font-size: .9rem;
+}
+
+.brand-line {
+  color: var(--su-brand);
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 750;
+  letter-spacing: -.035em;
+}
+
+.site-footer a {
+  color: var(--su-link);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- small screens ---------- */
+@media (max-width: 600px) {
+  .form-card {
+    padding: 29px 22px 25px;
+    border-radius: 24px;
+  }
+
+  .form-card h1 {
+    font-size: 2rem;
+  }
+
+  .field {
+    margin-top: 17px;
+  }
+
+  .field input {
+    min-height: 50px;
+  }
+
+  .site-footer > .container {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    min-height: 78px;
+    font-size: .83rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
