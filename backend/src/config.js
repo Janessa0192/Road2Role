@@ -69,6 +69,7 @@ const config = {
   aiModel,
   aiTimeoutMs: Number(process.env.AI_TIMEOUT_MS || 30_000),
   teacherRateLimitMax: Number(process.env.TEACHER_RATE_LIMIT_MAX || 20), // per minute per IP
+  quizAiRateLimitMax: Number(process.env.QUIZ_AI_RATE_LIMIT_MAX || 10), // AI quiz starts per minute per IP
   teacherLessonTtl: Number(process.env.TEACHER_LESSON_TTL || 24 * 3600), // seconds a generated lesson is cached
 
   // Bootstrap admin (created only when the users table is empty)

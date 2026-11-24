@@ -10,8 +10,9 @@ import VoiceTeacher from '../../components/VoiceTeacher/VoiceTeacher.jsx';
 import RoadmapQuiz from '../../components/TopicQuiz/RoadmapQuiz.jsx';
 import viewerCss from "../../../components/roadmap-viewer.css?inline";
 import teacherCss from "../../../components/voice-teacher.css?inline";
+import quizGameCss from "../../../components/quiz-game.css?inline";
 
-const STYLES = [viewerCss, teacherCss];
+const STYLES = [viewerCss, teacherCss, quizGameCss];
 const enc = encodeURIComponent;
 const isLinkBox = (key) => String(key).startsWith('json:');
 
@@ -272,7 +273,7 @@ function RoadmapContent({ slug }) {
 
       {/* Practice quiz: random questions from the whole roadmap */}
       <section className="rq-section" aria-label="Roadmap quiz">
-        <RoadmapQuiz slug={slug} />
+        <RoadmapQuiz slug={slug} user={user} loaded={loaded} />
       </section>
 
       {roadmap.article_html && (

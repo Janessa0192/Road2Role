@@ -69,7 +69,7 @@ function humanize(key) {
 }
 
 /** Roadmap + topic label + overview text for one topic, or throws 404. */
-function loadTopic(slug, topicKey) {
+export function loadTopic(slug, topicKey) {
   const roadmap = query.get('SELECT title, layout_json FROM roadmaps WHERE slug = ?', slug);
   if (!roadmap) throw ApiError.notFound('roadmap_not_found', 'Roadmap not found');
 
