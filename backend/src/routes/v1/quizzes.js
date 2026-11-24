@@ -3,8 +3,12 @@ import { Router } from 'express';
 import Joi from 'joi';
 import { query } from '../../db/index.js';
 import { ApiError } from '../../middleware/error.js';
-import { validate } from '../../middleware/validate.js';
+import { validate, common } from '../../middleware/validate.js';
 import { requireAuth } from '../../middleware/auth.js';
+import { createRateLimiter } from '../../middleware/rateLimit.js';
+import config from '../../config.js';
+import { LlmError } from '../../services/llm.js';
+import { startQuiz, checkAnswer } from '../../services/quizAi.js';
 import { getStreak, recordActivity, resolveTimeZone } from '../../lib/streak.js';
 
 const router = Router();
@@ -53,106 +57,47 @@ router.get('/', (req, res) => {
 });
 
 /* ------------------------------------------------------------------ *
- * Roadmap practice quiz (random questions across the WHOLE roadmap)  *
- *   - no login needed, nothing is stored (practice mode)             *
- *   - /random never sends the correct answers                        *
- *   - /check reveals the right answer for ONE question, after the    *
- *     learner has picked an option                                   *
- * These two routes must stay ABOVE '/:id' (otherwise "random" is     *
- * treated as a quiz id).                                             *
+ * AI practice quiz (questions are written by the AI, then cached)    *
+ *   - POST /ai/start : picks topics (what the learner studied, else   *
+ *     the whole roadmap), fills the cache when needed, returns random *
+ *     questions WITHOUT the correct answers                           *
+ *   - POST /ai/check : reveals the right answer + explanation for ONE *
+ *     question, after the learner has picked an option                *
+ * Needs a signed-in learner. Practice mode: nothing is stored.        *
+ * These routes must stay ABOVE '/:id' (otherwise "ai" is treated as a *
+ * quiz id).                                                           *
  * ------------------------------------------------------------------ */
-const randomSchema = Joi.object({
-  roadmap: Joi.string().pattern(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80).required(),
-  count: Joi.number().integer().min(1).max(30).default(10),
+const aiStartSchema = Joi.object({
+  roadmap: common.slug.required(),
+  topic: Joi.string().trim().max(300),
+  count: Joi.number().integer().min(1).max(20).default(10),
+  fresh: Joi.boolean().default(false),
 });
 
-const checkSchema = Joi.object({
+const aiCheckSchema = Joi.object({
   questionId: Joi.number().integer().positive().required(),
-  optionId: Joi.number().integer().positive().required(),
+  optionId: Joi.number().integer().min(0).max(3).required(),
 });
 
-function shuffle(list) {
-  const a = [...list];
-  for (let i = a.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+if (!config.isTest) {
+  // every /ai/start may call the AI, so keep it modest (per IP)
+  router.use('/ai/start', createRateLimiter({ windowMs: 60_000, max: config.quizAiRateLimitMax, name: 'quiz-ai' }));
 }
 
-/* GET /api/v1/quizzes/random?roadmap=frontend&count=10 */
-router.get('/random', validate({ query: randomSchema }), (req, res) => {
-  const { roadmap, count } = res.locals.validatedQuery;
-
-  const { n: available } = query.get(
-    `SELECT COUNT(*) AS n
-       FROM quiz_questions z
-       JOIN quizzes q ON q.id = z.quiz_id
-      WHERE q.is_active = 1 AND q.roadmap_slug = ?`,
-    roadmap,
-  );
-
-  const picked = query.all(
-    `SELECT z.id, z.question_text, q.topic_key, t.label AS topic_label
-       FROM quiz_questions z
-       JOIN quizzes q ON q.id = z.quiz_id
-       LEFT JOIN roadmap_topics t
-              ON t.roadmap_slug = q.roadmap_slug AND t.topic_key = q.topic_key
-      WHERE q.is_active = 1 AND q.roadmap_slug = ?
-      ORDER BY RANDOM()
-      LIMIT ?`,
-    roadmap,
-    count,
-  );
-
-  const questions = picked.map((question) => ({
-    ...question,
-    options: shuffle(
-      query.all(
-        'SELECT id, option_text FROM quiz_options WHERE question_id = ?',
-        question.id,
-      ),
-    ),
-  }));
-
-  res.json({ roadmap, available, questions });
+router.post('/ai/start', requireAuth, validate({ body: aiStartSchema }), async (req, res, next) => {
+  try {
+    const { roadmap, topic, count, fresh } = req.body;
+    const data = await startQuiz({ slug: roadmap, topic, count, fresh, userId: req.user.id });
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({ roadmap, ...data });
+  } catch (err) {
+    next(err instanceof LlmError ? new ApiError(err.status === 503 ? 503 : 502, 'ai_unavailable', err.message) : err);
+  }
 });
 
-/* POST /api/v1/quizzes/check  { questionId, optionId } */
-router.post('/check', validate({ body: checkSchema }), (req, res) => {
-  const { questionId, optionId } = req.body;
-
-  const question = query.get(
-    `SELECT z.id, z.explanation
-       FROM quiz_questions z
-       JOIN quizzes q ON q.id = z.quiz_id
-      WHERE z.id = ? AND q.is_active = 1`,
-    questionId,
-  );
-  if (!question) {
-    throw ApiError.notFound('question_not_found', 'Question not found');
-  }
-
-  const chosen = query.get(
-    'SELECT id FROM quiz_options WHERE id = ? AND question_id = ?',
-    optionId,
-    questionId,
-  );
-  if (!chosen) {
-    throw ApiError.badRequest('invalid_option', 'That option does not belong to this question');
-  }
-
-  const correct = query.get(
-    'SELECT id, option_text FROM quiz_options WHERE question_id = ? AND is_correct = 1',
-    questionId,
-  );
-
-  res.json({
-    correct: correct.id === optionId,
-    correctOptionId: correct.id,
-    correctOptionText: correct.option_text,
-    explanation: question.explanation || null,
-  });
+router.post('/ai/check', requireAuth, validate({ body: aiCheckSchema }), (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.json(checkAnswer(req.body.questionId, req.body.optionId));
 });
 
 /* GET /api/v1/quizzes/:id - questions without correct answers */
