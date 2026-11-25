@@ -20,7 +20,7 @@
   box-shadow: 0 1px 0 var(--border, #e4e7f2);
 }
 .r2r-header__inner {
-  width: min(1180px, calc(100% - 64px)); margin-inline: auto;
+  width: min(100% - 2 * var(--page-gutter, 32px), var(--page-max, 1600px)); margin-inline: auto;
   min-height: 68px; padding-block: 6.4px;
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;
 }
@@ -41,7 +41,7 @@
 
 .r2r-header .r2r-link {
   display: inline-block; padding: 7.2px 13.6px; border-radius: 999px;
-  font-size: 14px; font-weight: 500; text-decoration: none; color: #334155;
+  font-size: 17px; font-weight: 500; text-decoration: none; color: #334155;
   background: transparent; transition: color .2s, background .2s;
 }
 .r2r-header .r2r-link:hover,
@@ -57,10 +57,10 @@
 }
 .r2r-header .r2r-btn:hover { background: var(--surface-2, #f6f7fc); text-decoration: none; }
 .r2r-header .r2r-btn--primary {
-  padding: 11px 19px; border-radius: 12px; color: #fff; background: #174f56; border-color: #174f56;
-  box-shadow: 0 7px 16px #174f5630;
+  padding: 11px 19px; border-radius: 12px; color: #fff; background: #356AE6; border-color: #356AE6;
+  box-shadow: 0 7px 16px rgba(53, 106, 230, .28);
 }
-.r2r-header .r2r-btn--primary:hover { color: #fff; background: #123f45; }
+.r2r-header .r2r-btn--primary:hover { color: #fff; background: #2749B5; }
 .r2r-header .r2r-btn:disabled { opacity: .6; cursor: default; }
 
 /* theme toggle (added by theme.js, styled in theme.css) keeps its own look */
@@ -95,7 +95,6 @@
   .r2r-header [data-auth-area] { flex-direction: column; align-items: stretch; gap: 2.4px; }
   .r2r-header .r2r-btn { margin-top: 4.8px; }
   .r2r-header .r2r-btn--primary { justify-content: center; text-align: center; }
-  .r2r-header .r2r-nav a[aria-label^="Your account"] { display: none; } /* avatar duplicates "Hello, name" */
   .r2r-header .streak-pill { align-self: flex-start; margin: 4.8px 14.4px; }
   .r2r-header .theme-toggle { align-self: flex-start; margin: 4.8px 14.4px; }
 }
@@ -105,10 +104,13 @@
 }
 
 /* ---- dark theme (needs theme.css / theme.js on the page) ---- */
-[data-theme="dark"] .r2r-header { background: rgba(15, 18, 32, .88); }
+[data-theme="dark"] .r2r-header { background: rgba(11, 18, 32, .9); border-bottom-color: #1f2d4a; box-shadow: 0 1px 0 #1f2d4a; }
+/* logo has a white backdrop (multiply blend) -> keep it on a light pill in dark mode */
+[data-theme="dark"] .r2r-header .r2r-brand { background: #f4f8ff; border-radius: 14px; }
 [data-theme="dark"] .r2r-header .r2r-link { color: #cbd2ea; }
 [data-theme="dark"] .r2r-header .r2r-link:hover,
 [data-theme="dark"] .r2r-header .r2r-link[aria-current="page"] { color: var(--accent-strong, #aab1ff); background: var(--accent-soft, #262d5c); }
 [data-theme="dark"] .r2r-header .r2r-btn { color: var(--text, #e8eaf6); background: var(--surface, #1a1f36); border-color: var(--border, #2d3454); box-shadow: none; }
-[data-theme="dark"] .r2r-header .r2r-btn--primary { color: #fff; background: #1f7a82; border-color: #1f7a82; }
+[data-theme="dark"] .r2r-header .r2r-btn--primary { color: #fff; background: #3b72ee; border-color: #3b72ee; }
+[data-theme="dark"] .r2r-header .r2r-btn--primary:hover { background: #2f62d8; border-color: #2f62d8; }
 [data-theme="dark"] .r2r-header .r2r-toggle { background: var(--surface, #1a1f36); }

@@ -169,17 +169,17 @@ export default function Home() {
                 <li className="done"><span className="step-check">✓</span><span>Learn Step by Step</span><b>02</b></li>
                 <li className="done"><span className="step-check">✓</span><span>Track Your Progress</span><b>03</b></li>
                 <li className="done"><span className="step-check">✓</span><span>Test Yourself</span><b>04</b></li>
-                <li><span className="step-check">5</span><span>Get Job Ready</span><b>05</b></li>
+                <li className="done"><span className="step-check">✓</span><span>Get Job Ready</span><b>05</b></li>
               </ul>
               <div className="mock-progress">
-                <div className="progress-meta" style={{ color: 'black' }}>
+                <div className="progress-meta">
                   <span>YOUR MOMENTUM</span>
                   <strong>80%</strong>
                 </div>
                 <div className="progress-track">
                   <div className="progress-fill" style={{ width: '80%' }}></div>
                 </div>
-                <small style={{ color: 'black' }}>Keep going — you're doing great!</small>
+                <small>Keep going — you're doing great!</small>
               </div>
             </div>
             <div className="sticky s1">PLAN<br />LEARN<br />PRACTICE<br />GROW</div>

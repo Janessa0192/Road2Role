@@ -4,7 +4,7 @@ import { api } from '../../services/api.js';
 import { useAuth } from '../../AuthContext/AuthContext.jsx';
 import { ThemeToggle } from '../ThemeContext/ThemeContext.jsx';
 import { showError } from '../../utils/errors.js';
-import logo from '../../assets/Logo.png';
+import logo from '../../assets/logo-mark.png';
 
 /** Text for the 🔥 streak pill (same wording as the old nav.js). */
 function streakLabel(streak) {
@@ -129,7 +129,10 @@ export default function Navbar() {
     <header className={`r2r-header${open ? ' is-open' : ''}`} data-site-header>
       <div className="r2r-header__inner">
         <Link className="r2r-brand" to="/" aria-label="Road2Role home" aria-current={current('/')}>
-          <img className="r2r-brand-logo" src={logo} alt="Road2Role — Pathways to Career Success" />
+          <span className="r2r-brand-mark">
+            <img className="r2r-brand-logo" src={logo} alt="" />
+          </span>
+          <span className="r2r-brand-name">Road2Role</span>
         </Link>
         <button
           className="r2r-toggle"
