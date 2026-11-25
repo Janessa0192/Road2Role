@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { api } from '../../services/api.js';
 import { showError } from '../../utils/errors.js';
+import RobotClassroom from './RobotClassroom.jsx';
+import InterviewMode from './InterviewMode.jsx';
 import { LANGUAGES, speechSupport, createRecognition, useVoices, voicesFor, bestVoice, micErrorMessage } from '../../hooks/useSpeech.js';
 
-// Voice teacher shown under every roadmap.
-//   1. pick a topic (or click a box in the diagram) and press Play - the teacher explains it aloud
-//   2. pause / skip / change speed / change language at any time
-//   3. ask a doubt by voice (mic) or by typing - the teacher answers aloud, then you continue the lesson
+// Voice teacher shown under every roadmap. The card is only a launcher:
+//   - pick topic / language / speed / voice here, then open the robot classroom or interview practice
+//   - this component owns the lesson, the doubts and the speech; RobotClassroom.jsx (the full-screen
+//     robot with subtitles, player buttons and doubts) and InterviewMode.jsx only show its state
+//   - in the classroom: pause / skip parts / ask a doubt by voice or typing, then continue the lesson
 // Speaking and listening use the browser's Web Speech API; the server only writes what to say (/teacher/*).
 
 const RATES = [0.8, 1, 1.2, 1.5];
@@ -45,10 +47,12 @@ export default function VoiceTeacher({ slug, topics, openRequest, doneKeys, onMa
   const [needLogin, setNeedLogin] = useState(false);
 
   const [heard, setHeard] = useState('');
-  const [typed, setTyped] = useState('');
   const [chat, setChat] = useState([]); // [{ role: 'user' | 'assistant', content }]
   const [answerText, setAnswerText] = useState('');
   const [markState, setMarkState] = useState('idle'); // idle | saving | error
+  const [classroomOpen, setClassroomOpen] = useState(false); // full-screen robot classroom
+  const [interviewOpen, setInterviewOpen] = useState(false); // full-screen mock interview
+  const [nowSpeaking, setNowSpeaking] = useState(''); // the piece being spoken right now (for subtitles)
 
   // refs let the speaking loop see the latest settings without restarting
   const runRef = useRef(0); // bumped on every play/stop so stale utterance callbacks are ignored
@@ -133,6 +137,7 @@ export default function VoiceTeacher({ slug, topics, openRequest, doneKeys, onMa
           return;
         }
         if (track) setIdx(i);
+        setNowSpeaking(segments[i]);
         setStatus('speaking');
 
         const u = new SpeechSynthesisUtterance(segments[i]);
@@ -170,6 +175,7 @@ export default function VoiceTeacher({ slug, topics, openRequest, doneKeys, onMa
       streamCurrentRef.current = next;
       streamSpeakingRef.current = true;
       if (next.track) setIdx(next.index);
+      setNowSpeaking(next.text);
       setStatus('speaking');
       const utterance = new SpeechSynthesisUtterance(next.text);
       utterance.lang = LANGUAGES[langRef.current].speak;
@@ -377,7 +383,6 @@ export default function VoiceTeacher({ slug, topics, openRequest, doneKeys, onMa
     setError('');
     setNeedLogin(false);
     setHeard('');
-    setTyped('');
     setAnswerText('');
     setStatus('thinking');
     const history = chat.slice(-6);
@@ -498,14 +503,31 @@ export default function VoiceTeacher({ slug, topics, openRequest, doneKeys, onMa
   }
   const isDone = doneKeys?.has(topicKey);
 
+  function openClassroom() {
+    setClassroomOpen(true);
+    if (status === 'idle') play(); // the click counts as the gesture the browser needs to start speaking
+  }
+
+  // same main button as the normal controls, so the classroom behaves exactly like the card
+  const classroomPrimary = speaking
+    ? { label: '⏸ Pause', onClick: pause }
+    : status === 'paused'
+      ? { label: '▶ Continue', onClick: answerText ? continueLesson : resume }
+      : {
+          label: status === 'loading' ? 'Preparing…' : !support.tts ? 'Show lesson' : status === 'done' ? '↻ Replay lesson' : '▶ Start lesson',
+          onClick: () => play(),
+          disabled: busy || lessonStreaming || status === 'listening',
+        };
+  const lastQuestion = [...chat].reverse().find((m) => m.role === 'user')?.content || '';
+
   return (
     <div className="vt-card" aria-labelledby="vt-title">
       <div className="vt-head">
         <div>
           <h2 id="vt-title" className="vt-title">
-             Voice teacher
+            Voice teacher
           </h2>
-          <p className="vt-sub">Don't feel like reading? Pick a topic and let your teacher explain it to you, then ask your doubts out loud.</p>
+          <p className="vt-sub">Don't feel like reading? Pick a topic and let the robot teacher explain it to you, then ask your doubts out loud.</p>
         </div>
         <span className={`vt-pill${speaking ? ' live' : ''}`} aria-live="polite">
           {status === 'speaking' && (lessonStreaming ? 'Preparing next part…' : 'Speaking…')}
@@ -520,7 +542,7 @@ export default function VoiceTeacher({ slug, topics, openRequest, doneKeys, onMa
 
       {!support.tts && (
         <p className="field-error" role="alert">
-          This browser cannot speak out loud. Please use the latest Chrome, Edge or Safari. You can still read the lesson text below.
+          This browser cannot speak out loud. Please use the latest Chrome, Edge or Safari. You can still read the lesson text in the classroom.
         </p>
       )}
 
@@ -575,135 +597,22 @@ export default function VoiceTeacher({ slug, topics, openRequest, doneKeys, onMa
         </p>
       )}
 
-      <div className="vt-stage" aria-live="polite">
-        <p className="vt-topic">{lesson?.title || topic?.title}</p>
-        <p className={`vt-caption${caption ? '' : ' empty'}`}>
-          {caption || (busy ? '…' : 'Press “Start lesson” and I will teach this topic step by step.')}
-        </p>
-        {segments.length > 0 && (
-          <div className="vt-bar" aria-hidden="true">
-            <div className="vt-bar-fill" style={{ width: `${Math.round(((idx + (status === 'done' ? 1 : 0)) / segments.length) * 100)}%` }}></div>
-          </div>
-        )}
-      </div>
-
-      <div className="vt-controls">
-        <button type="button" className="vt-btn" onClick={() => goTopic(-1)} disabled={busy || order <= 0} aria-label="Previous topic" title="Previous topic">
-          ⏮
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.4rem' }}>
+        <button type="button" className="quiz-button" onClick={openClassroom}>
+          🤖 {status === 'idle' || status === 'done' ? 'Start with the robot teacher' : 'Back to the robot teacher'}
         </button>
-        <button type="button" className="vt-btn" onClick={() => jump(idx - 1)} disabled={!lesson || busy || streaming} aria-label="Previous part" title="Previous part">
-          ◀
-        </button>
-
-        {speaking ? (
-          <button type="button" className="quiz-button" onClick={pause}>
-            ⏸ Pause
-          </button>
-        ) : status === 'paused' ? (
-          <button type="button" className="quiz-button" onClick={answerText ? continueLesson : resume}>
-            ▶ Continue
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="quiz-button"
-            disabled={busy || lessonStreaming || status === 'listening'}
-            onClick={() => play()}
-          >
-            {status === 'loading'
-              ? 'Preparing…'
-              : !support.tts
-                ? ' Show lesson'
-                : status === 'done'
-                  ? '↻ Replay lesson'
-                  : '▶ Start lesson'}
-          </button>
-        )}
-
-        <button type="button" className="vt-btn" onClick={() => jump(idx + 1)} disabled={!lesson || busy || streaming || idx >= segments.length - 1} aria-label="Next part" title="Next part">
-          ▶
-        </button>
-        <button type="button" className="vt-btn" onClick={() => goTopic(1)} disabled={busy || order < 0 || order >= topics.length - 1} aria-label="Next topic" title="Next topic">
-          ⏭
-        </button>
-        <button type="button" className="vt-btn" onClick={stop} disabled={status === 'idle'} aria-label="Stop" title="Stop">
-          ⏹
+        <button
+          type="button"
+          className="vt-btn wide"
+          onClick={() => {
+            stop(); // the teacher goes quiet while you practise
+            setInterviewOpen(true);
+          }}
+        >
+          🎙️ Interview practice
         </button>
       </div>
-
-      {status === 'done' && (
-        <div className="vt-done">
-          <span> That was “{lesson?.title}”. Any doubts? Ask below, or move on.</span>
-          <div className="vt-done-actions">
-            {onMarkDone && !isDone && (
-              <button type="button" className="vt-btn wide" onClick={markDone} disabled={markState === 'saving'}>
-                {markState === 'saving' ? 'Saving…' : '✓ Mark topic completed'}
-              </button>
-            )}
-            {isDone && <span className="vt-ok">✓ Completed</span>}
-            {order >= 0 && order < topics.length - 1 && (
-              <button type="button" className="vt-btn wide" onClick={() => goTopic(1, true)}>
-                Teach next topic →
-              </button>
-            )}
-          </div>
-          {markState === 'error' && <p className="field-error">Could not save your progress. Please try again.</p>}
-        </div>
-      )}
-
-      <div className="vt-ask">
-        <div className="vt-ask-row">
-          {support.stt && (
-            <button
-              type="button"
-              className={`vt-mic${status === 'listening' ? ' on' : ''}`}
-              onClick={status === 'listening' ? stopListening : listen}
-              disabled={busy || lessonStreaming}
-              aria-pressed={status === 'listening'}
-            >
-              🎤 {status === 'listening' ? 'Tap when you are done' : 'Ask a doubt'}
-            </button>
-          )}
-          <form
-            className="vt-type"
-            onSubmit={(e) => {
-              e.preventDefault();
-              ask(typed);
-            }}
-          >
-            <input
-              type="text"
-              value={typed}
-              maxLength={500}
-              placeholder={support.stt ? 'or type your doubt here…' : 'Type your doubt here…'}
-              onChange={(e) => setTyped(e.target.value)}
-              disabled={busy || lessonStreaming || status === 'listening'}
-              aria-label="Type your doubt"
-            />
-            <button type="submit" className="vt-btn wide" disabled={busy || lessonStreaming || status === 'listening' || typed.trim().length < 2}>
-              Ask
-            </button>
-          </form>
-        </div>
-        {!support.stt && <p className="res-note">Voice questions need Chrome, Edge or Safari. You can type your doubt instead.</p>}
-        {heard && status === 'listening' && <p className="vt-heard">“{heard}”</p>}
-
-        {chat.length > 0 && (
-          <ul className="vt-chat" aria-label="Your doubts and the teacher's answers">
-            {chat.slice(-6).map((m, i) => (
-              <li key={i} className={m.role}>
-                <strong>{m.role === 'user' ? 'You' : 'Teacher'}:</strong> {m.content}
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {needLogin && (
-          <p className="field-error" role="alert">
-            Please <Link to={`/login?next=${encodeURIComponent(window.location.pathname)}`}>sign in</Link> to ask the teacher your doubts.
-          </p>
-        )}
-      </div>
+      <p className="res-note">The robot teaches the lesson with subtitles and answers your doubts. Interview practice asks you questions for a role and gives you feedback.</p>
 
       {error && (
         <p className="field-error" role="alert">
@@ -711,24 +620,48 @@ export default function VoiceTeacher({ slug, topics, openRequest, doneKeys, onMa
         </p>
       )}
 
-      {lesson?.mode === 'basic' && (
-        <p className="res-note">Basic mode: the teacher is reading this topic's notes aloud. Smart explanations and doubt-solving switch on when the site owner adds an AI key.</p>
-      )}
+      <RobotClassroom
+        open={classroomOpen}
+        status={status}
+        topicTitle={lesson?.title || topic?.title}
+        nowSpeaking={nowSpeaking}
+        caption={caption}
+        heard={heard}
+        lastQuestion={lastQuestion}
+        progress={segments.length > 0 ? Math.round(((idx + (status === 'done' ? 1 : 0)) / segments.length) * 100) : null}
+        support={support}
+        busy={busy || lessonStreaming}
+        primary={classroomPrimary}
+        hasNext={order >= 0 && order < topics.length - 1}
+        lessonMode={lesson?.mode}
+        error={error}
+        needLogin={needLogin}
+        onClose={() => setClassroomOpen(false)}
+        onStop={stop}
+        onListen={listen}
+        onStopListening={stopListening}
+        onAsk={ask}
+        onNext={() => goTopic(1, true)}
+        segments={segments}
+        idx={idx}
+        streaming={streaming}
+        chat={chat}
+        canPrevPart={!!lesson && !busy && !streaming && idx > 0}
+        canNextPart={!!lesson && !busy && !streaming && idx < segments.length - 1}
+        canPrevTopic={order > 0}
+        canNextTopic={order >= 0 && order < topics.length - 1}
+        onPrevPart={() => jump(idx - 1)}
+        onNextPart={() => jump(idx + 1)}
+        onPrevTopic={() => goTopic(-1)}
+        onNextTopic={() => goTopic(1)}
+        onPlayFrom={playFrom}
+        isDone={!!isDone}
+        canMarkDone={!!onMarkDone && !isDone}
+        markState={markState}
+        onMarkDone={markDone}
+      />
 
-      {segments.length > 0 && (
-        <details className="vt-transcript">
-          <summary>Show lesson text</summary>
-          <ol>
-            {segments.map((s, i) => (
-              <li key={i} className={i === idx ? 'now' : ''}>
-                <button type="button" onClick={() => playFrom(i)} disabled={streaming}>
-                  {s}
-                </button>
-              </li>
-            ))}
-          </ol>
-        </details>
-      )}
+      <InterviewMode open={interviewOpen} slug={slug} onClose={() => setInterviewOpen(false)} />
     </div>
   );
 }
