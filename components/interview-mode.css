@@ -1,0 +1,130 @@
+/* Interview practice (frontend/components/VoiceTeacher/InterviewMode.jsx).
+   Same soft pastel look as the robot classroom: it uses the site's colour variables, so the
+   light and dark theme both work. The robot's own styles come from robot-classroom.css. */
+.iv-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2100;
+  overflow-y: auto;
+  color: var(--text);
+  background:
+    radial-gradient(900px 520px at 8% -8%, rgba(167, 139, 250, 0.22), transparent 62%),
+    radial-gradient(800px 480px at 100% 8%, rgba(125, 211, 252, 0.2), transparent 60%),
+    radial-gradient(900px 520px at 70% 112%, rgba(110, 231, 183, 0.18), transparent 60%),
+    var(--bg-soft);
+}
+.iv-shell {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 760px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: max(0.8rem, env(safe-area-inset-top)) 1rem max(1.2rem, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.iv-top { display: flex; align-items: center; gap: 0.75rem; }
+.iv-title { flex: 1; margin: 0; font-size: 1.05rem; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.iv-icon {
+  flex: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted); box-shadow: var(--shadow-sm);
+}
+.iv-icon:hover, .iv-icon:focus-visible { color: var(--text); border-color: var(--border-strong); }
+
+.iv-card {
+  display: flex; flex-direction: column; align-items: center; gap: 0.8rem; padding: 1.2rem;
+  border-radius: 20px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+}
+.iv-robot { width: min(190px, 42vw, 26vh); aspect-ratio: 320 / 380; }
+.iv-robot-lg { width: min(220px, 50vw, 30vh); }
+.iv-h { margin: 0; font-size: 1.4rem; text-align: center; }
+.iv-h3 { margin: 0.4rem 0 0; font-size: 1.1rem; align-self: flex-start; }
+.iv-sub { margin: 0; color: var(--muted); text-align: center; max-width: 520px; line-height: 1.5; }
+
+/* form */
+.iv-field { display: flex; flex-direction: column; gap: 0.3rem; width: 100%; font-weight: 600; font-size: 0.9rem; color: var(--muted); }
+.iv-field input, .iv-field select, .iv-field textarea {
+  width: 100%; box-sizing: border-box; padding: 0.7rem 0.9rem; border-radius: 14px; font: inherit; font-weight: 400;
+  color: var(--text); background: var(--bg-soft); border: 1.5px solid var(--border-strong);
+}
+.iv-field textarea { resize: vertical; min-height: 6.5rem; line-height: 1.5; }
+.iv-row { display: grid; gap: 0.7rem; width: 100%; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 560px) { .iv-row { grid-template-columns: 1fr; } }
+.iv-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; }
+.iv-chip {
+  padding: 0.3rem 0.8rem; border-radius: 999px; cursor: pointer; font: inherit; font-size: 0.85rem;
+  border: 1px solid var(--border-strong); background: var(--bg-soft); color: var(--text);
+}
+.iv-chip.on { background: var(--accent-soft); color: var(--accent-strong); border-color: #a5b4fc; font-weight: 650; }
+.iv-check { display: flex; align-items: center; gap: 0.5rem; color: var(--muted); font-size: 0.92rem; }
+
+/* buttons */
+.iv-primary, .iv-btn { font: inherit; font-weight: 650; border-radius: 999px; cursor: pointer; padding: 0.7rem 1.3rem; }
+.iv-primary { border: 0; color: #1e1b4b; background: linear-gradient(90deg, #c7d2fe, #bae6fd); box-shadow: var(--shadow-sm); }
+.iv-btn { border: 1.5px solid var(--border-strong); background: var(--surface); color: var(--text); }
+.iv-primary:hover:not(:disabled), .iv-btn:hover:not(:disabled) { filter: brightness(0.97); }
+.iv-primary:disabled, .iv-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.iv-mic.on { background: var(--danger-soft); border-color: #fda4af; animation: iv-pulse 1.2s ease-in-out infinite; }
+@keyframes iv-pulse { 50% { box-shadow: 0 0 0 6px rgba(253, 164, 175, 0.35); } }
+.iv-overlay button:focus-visible, .iv-overlay input:focus-visible, .iv-overlay select:focus-visible, .iv-overlay textarea:focus-visible {
+  outline: 3px solid var(--accent); outline-offset: 2px;
+}
+.iv-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; width: 100%; }
+.iv-note { margin: 0; max-width: 560px; text-align: center; font-size: 0.88rem; color: var(--muted); }
+.iv-note.bad { color: var(--danger); }
+
+/* question screen */
+.iv-progress { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 650; color: var(--muted); }
+.iv-dots { display: flex; gap: 0.35rem; }
+.iv-dots i { width: 22px; height: 6px; border-radius: 999px; background: var(--border); }
+.iv-dots i.done { background: #86efac; }
+.iv-dots i.now { background: #a5b4fc; }
+.iv-status {
+  margin: 0; padding: 0.2rem 0.85rem; border-radius: 999px; font-size: 0.82rem; font-weight: 650;
+  background: var(--bg-soft); color: var(--muted); border: 1px solid var(--border);
+}
+.iv-status.live { background: var(--accent-soft); color: var(--accent-strong); border-color: #a5b4fc; }
+.iv-bubble {
+  width: 100%; box-sizing: border-box; padding: 0.9rem 1.1rem; border-radius: 18px; text-align: center;
+  background: var(--accent-soft); border: 1px solid #c7d2fe;
+}
+.iv-who { margin: 0 0 0.25rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-strong); }
+.iv-q { margin: 0; font-size: clamp(1.05rem, 2.6vw, 1.3rem); line-height: 1.5; font-weight: 600; animation: iv-in 0.25s ease; }
+@keyframes iv-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* review */
+.iv-score {
+  display: flex; align-items: baseline; gap: 0.3rem; justify-content: center; width: 130px; height: 130px;
+  border-radius: 50%; align-self: center; flex-direction: row; align-items: center; border: 6px solid;
+}
+.iv-score strong { font-size: 3rem; line-height: 1; }
+.iv-score span { color: var(--muted); font-weight: 600; }
+.iv-score.good { border-color: #6ee7b7; background: var(--success-soft); }
+.iv-score.ok { border-color: #fcd34d; background: var(--bg-soft); }
+.iv-score.low { border-color: #fda4af; background: var(--danger-soft); }
+.iv-verdict { margin: 0; text-align: center; font-size: 1.05rem; line-height: 1.5; max-width: 560px; }
+.iv-lists { display: grid; gap: 0.7rem; width: 100%; }
+.iv-list { padding: 0.8rem 1rem; border-radius: 14px; background: var(--bg-soft); border: 1px solid var(--border); border-left: 5px solid; }
+.iv-list.good { border-left-color: #6ee7b7; }
+.iv-list.low { border-left-color: #fda4af; }
+.iv-list.tip { border-left-color: #a5b4fc; }
+.iv-list h3 { margin: 0 0 0.35rem; font-size: 0.98rem; }
+.iv-list ul { margin: 0; padding-left: 1.2rem; line-height: 1.55; }
+.iv-qs { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; width: 100%; }
+.iv-qs li { padding: 0.8rem 1rem; border-radius: 14px; background: var(--bg-soft); border: 1px solid var(--border); border-left: 5px solid; }
+.iv-qs li.good { border-left-color: #6ee7b7; }
+.iv-qs li.ok { border-left-color: #fcd34d; }
+.iv-qs li.low { border-left-color: #fda4af; }
+.iv-qs p { margin: 0 0 0.35rem; line-height: 1.5; }
+.iv-qs-head { display: flex; justify-content: space-between; gap: 0.75rem; align-items: flex-start; }
+.iv-qs-q { font-weight: 650; }
+.iv-qs-a { color: var(--muted); }
+.iv-better { color: var(--text); }
+.iv-badge { flex: none; padding: 0.1rem 0.6rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; border: 1px solid var(--border-strong); }
+.iv-badge.good { background: var(--success-soft); }
+.iv-badge.low { background: var(--danger-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  .iv-overlay * { animation: none !important; transition: none !important; }
+}
