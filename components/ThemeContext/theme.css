@@ -34,17 +34,17 @@
 [data-theme="dark"] {
   color-scheme: dark; /* dark scrollbars, form controls, dialogs */
 
-  --bg: #0f1220;
-  --bg-soft: #151930;
-  --surface: #1a1f36;
-  --surface-2: #232946;
-  --border: #2d3454;
-  --border-strong: #3d4770;
-  --text: #e8eaf6;
-  --muted: #a3abc8;
-  --accent: #8b93ff;
-  --accent-strong: #aab1ff;
-  --accent-soft: #262d5c;
+  --bg: #0b1220;
+  --bg-soft: #0f1829;
+  --surface: #121b2f;
+  --surface-2: #1a2744;
+  --border: #243455;
+  --border-strong: #35496f;
+  --text: #e7eefc;
+  --muted: #9db0d3;
+  --accent: #6ea0ff;
+  --accent-strong: #9bbcff;
+  --accent-soft: #1b2b52;
   --success-soft: #12351f;
   --danger-soft: #3b1619;
   --shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
@@ -52,7 +52,7 @@
 }
 
 /* ---------- header / nav ---------- */
-[data-theme="dark"] .site-header { background: rgba(15, 18, 32, 0.88); }
+[data-theme="dark"] .site-header { background: rgba(11, 18, 32, 0.9); }
 [data-theme="dark"] .site-nav .nav-link { color: #cbd2ea; }
 [data-theme="dark"] .site-nav .nav-link:hover { color: var(--accent-strong); }
 [data-theme="dark"] .nav-toggle { background: var(--surface); }
@@ -60,34 +60,28 @@
 /* ---------- buttons ---------- */
 [data-theme="dark"] .btn { background: var(--surface); color: var(--text); }
 [data-theme="dark"] .btn:hover { background: var(--surface-2); }
-/* keep white text readable: use the deep indigo as the button background */
+/* keep white text readable: use a deep blue as the button background */
 [data-theme="dark"] .btn-primary,
 [data-theme="dark"] a.btn-primary,
 [data-theme="dark"] .chip[aria-pressed="true"] {
-  background: #4f46e5; border-color: #4f46e5; color: #fff;
+  background: #3b72ee; border-color: #3b72ee; color: #fff;
 }
-[data-theme="dark"] .btn-primary:hover { background: #6259f0; border-color: #6259f0; color: #fff; }
+[data-theme="dark"] .btn-primary:hover { background: #2f62d8; border-color: #2f62d8; color: #fff; }
 [data-theme="dark"] .btn-danger { border-color: #7f1d1d; color: #fca5a5; }
 
 /* ---------- hero ---------- */
 [data-theme="dark"] .hero-copy .eyebrow { border-color: var(--border-strong); }
-[data-theme="dark"] .hero-visual {
-  background:
-    radial-gradient(circle at 70% 20%, rgba(99, 102, 241, 0.28) 0, rgba(99, 102, 241, 0) 60%),
-    radial-gradient(circle at 20% 90%, rgba(16, 185, 129, 0.16) 0, rgba(16, 185, 129, 0) 55%);
-}
+[data-theme="dark"] .hero-visual { background: none; }
 [data-theme="dark"] .mock-card { background: var(--surface); }
 [data-theme="dark"] .mock-steps li { color: #cbd2ea; }
 [data-theme="dark"] .mock-steps li::before { background: var(--surface); border-color: #4a5480; }
-[data-theme="dark"] .mock-steps li.done::before { background-color: #4f46e5; border-color: #4f46e5; }
+[data-theme="dark"] .mock-steps li.done::before { background-color: #3b72ee; border-color: #3b72ee; }
 [data-theme="dark"] .mock-steps li:not(:last-child)::after { background: var(--border-strong); }
 /* sticky notes stay pastel with dark text (set in styles.css) */
 
 /* ---------- feature strip, cards, controls ---------- */
 [data-theme="dark"] .feature { background: var(--surface); }
-[data-theme="dark"] .feature:nth-child(1) .f-icon { background: rgba(99, 102, 241, 0.25); }
-[data-theme="dark"] .feature:nth-child(2) .f-icon { background: rgba(34, 197, 94, 0.2); }
-[data-theme="dark"] .feature:nth-child(3) .f-icon { background: rgba(245, 158, 11, 0.2); }
+[data-theme="dark"] .feature .f-icon { background: rgba(74, 128, 240, 0.2); color: #9dc0ff; }
 
 [data-theme="dark"] .card { background: var(--surface); }
 [data-theme="dark"] .card:hover { background: var(--surface-2); border-color: var(--border-strong); }
@@ -100,10 +94,10 @@
 [data-theme="dark"] .field input::placeholder { color: #7983a6; }
 [data-theme="dark"] .search-box input:focus,
 [data-theme="dark"] select:focus,
-[data-theme="dark"] .field input:focus { box-shadow: 0 0 0 4px rgba(139, 147, 255, 0.25); }
+[data-theme="dark"] .field input:focus { box-shadow: 0 0 0 4px rgba(110, 160, 255, 0.28); }
 
 [data-theme="dark"] .skeleton {
-  background: linear-gradient(90deg, #1a1f36 25%, #262d4c 50%, #1a1f36 75%);
+  background: linear-gradient(90deg, #121b2f 25%, #1c2a49 50%, #121b2f 75%);
   background-size: 200% 100%;
 }
 
@@ -119,10 +113,10 @@
 [data-theme="dark"] .badge.framework { background: rgba(34, 197, 94, 0.18); color: #86efac; }
 [data-theme="dark"] .badge.tool { background: rgba(245, 158, 11, 0.18); color: #fcd34d; }
 [data-theme="dark"] .badge.database { background: rgba(6, 182, 212, 0.18); color: #67e8f9; }
-[data-theme="dark"] .badge.concept { background: rgba(236, 72, 153, 0.18); color: #f9a8d4; }
+[data-theme="dark"] .badge.concept { background: rgba(74, 128, 240, 0.2); color: #9dc0ff; }
 [data-theme="dark"] .badge.beginner { color: #86efac; }
 [data-theme="dark"] .badge.intermediate { background: rgba(245, 158, 11, 0.18); color: #fcd34d; }
-[data-theme="dark"] .badge.advanced { color: #fca5a5; }
+[data-theme="dark"] .badge.advanced { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
 
 /* ---------- alerts / status ---------- */
 [data-theme="dark"] .alert-error { border-color: #7f1d1d; color: #fca5a5; }
@@ -162,7 +156,7 @@
 [data-theme="dark"] .rq-opt.wrong .rq-tag { color: #fca5a5; }
 
 /* roadmap diagram: yellow boxes keep their dark text; just make the check circle blend in */
-[data-theme="dark"] .rm-edge { stroke: #8b93ff; }
+[data-theme="dark"] .rm-edge { stroke: #6ea0ff; }
 [data-theme="dark"] .rm-check:hover circle,
 [data-theme="dark"] .rm-check:focus circle { fill: #14532d; }
 

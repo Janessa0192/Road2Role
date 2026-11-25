@@ -1,8 +1,8 @@
 /* =============================================================
    Road2Role - shared navbar (one look on every page)
-   Copied from the landing page header. All classes are r2r-*
-   so page stylesheets (account.css, signin.css ...) can't change it.
-   Load this file LAST in every page's <head>.
+   All classes are r2r-* so page stylesheets (account.css, signin.css ...) can't change it.
+   Width + side gutter come from styles.css (--page-max / --page-gutter), the SAME values the
+   page content and footer use, so the logo lines up with the content's left edge.
    ============================================================= */
 
 .r2r-header,
@@ -12,58 +12,66 @@
 
 .r2r-header {
   position: sticky; top: 0; z-index: 50; flex-shrink: 0;
-  min-height: 81px;                       /* reserve space until nav.js renders the bar */
+  min-height: 72px;
   font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; text-align: left;
-  background: rgb(247, 249, 249);
+  background: rgba(255, 255, 255, .9);
   -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(28, 65, 70, .09);
-  box-shadow: 0 1px 0 var(--border, #e4e7f2);
+  border-bottom: 1px solid #E1E8F4;
 }
 .r2r-header__inner {
-  width: min(1180px, calc(100% - 64px)); margin-inline: auto;
-  min-height: 68px; padding-block: 6.4px;
+  width: min(100% - 2 * var(--page-gutter, 24px), var(--page-max, 1240px)); margin-inline: auto;
+  min-height: 72px; padding-block: 8px;
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;
 }
 
-/* ---- brand ---- */
+/* ---- brand: logo mark + live "Road2Role" text, flush with the content's left edge ---- */
 .r2r-header .r2r-brand {
-  display: flex; align-items: center; width: 190px; height: 68px; overflow: hidden;
+  display: flex; align-items: center; gap: 12px; margin-right: auto;
   text-decoration: none; color: inherit;
 }
-.r2r-header .r2r-brand-logo {
-  width: 110%; height: 180%; object-fit: contain;
-  mix-blend-mode: multiply; margin-top: 12%;
+/* The mark is a transparent PNG. It used to be drawn with mix-blend-mode: multiply, which makes
+   it vanish on a dark background. Now it is shown normally and gets a light tile in dark mode. */
+.r2r-header .r2r-brand-mark {
+  display: grid; place-items: center; flex: none;
+  width: 64px; height: 48px; border-radius: 12px;
+}
+.r2r-header .r2r-brand-logo { width: 52px; height: auto; max-height: 42px; object-fit: contain; }
+.r2r-header .r2r-brand-name {
+  font: 800 25px/1 'Manrope', 'DM Sans', sans-serif; letter-spacing: -.03em; color: #172B4D;
 }
 
 /* ---- nav ---- */
-.r2r-header .r2r-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 30px; margin-left: auto; }
+.r2r-header .r2r-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 22px; margin-left: auto; }
 .r2r-header [data-auth-area] { display: flex; align-items: center; gap: 12px; }
 
 .r2r-header .r2r-link {
-  display: inline-block; padding: 7.2px 13.6px; border-radius: 999px;
-  font-size: 14px; font-weight: 500; text-decoration: none; color: #334155;
+  display: inline-block; padding: 8px 14px; border-radius: 999px;
+  font-size: 16px; font-weight: 600; text-decoration: none; color: #3B4B66;
   background: transparent; transition: color .2s, background .2s;
 }
 .r2r-header .r2r-link:hover,
 .r2r-header .r2r-link[aria-current="page"] {
-  color: var(--accent, #4f46e5); background: var(--accent-soft, #eef0ff); text-decoration: none;
+  color: #2749B5; background: #EAF1FF; text-decoration: none;
+}
+.r2r-header a:focus-visible, .r2r-header button:focus-visible {
+  outline: 3px solid rgba(53, 106, 230, .45); outline-offset: 2px;
 }
 
 .r2r-header .r2r-btn {
   display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
-  padding: 9px 16px; border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 1.15;
-  text-decoration: none; color: var(--text, #1b1f3b); background: #fff;
-  border: 1px solid var(--border, #e4e7f2); box-shadow: 0 7px 16px rgba(23, 79, 86, .08);
+  padding: 10px 18px; border-radius: 10px; font-family: inherit; font-size: 15px; font-weight: 700; line-height: 1.15;
+  text-decoration: none; color: #172B4D; background: #fff;
+  border: 1px solid #D5E0F3; box-shadow: 0 6px 14px rgba(35, 66, 125, .08);
 }
-.r2r-header .r2r-btn:hover { background: var(--surface-2, #f6f7fc); text-decoration: none; }
+.r2r-header .r2r-btn:hover { background: #F1F6FF; text-decoration: none; }
 .r2r-header .r2r-btn--primary {
-  padding: 11px 19px; border-radius: 12px; color: #fff; background: #174f56; border-color: #174f56;
-  box-shadow: 0 7px 16px #174f5630;
+  padding: 11px 22px; border-radius: 12px; color: #fff; background: #356AE6; border-color: #356AE6;
+  box-shadow: 0 8px 18px rgba(53, 106, 230, .26);
 }
-.r2r-header .r2r-btn--primary:hover { color: #fff; background: #123f45; }
+.r2r-header .r2r-btn--primary:hover { color: #fff; background: #2749B5; border-color: #2749B5; }
 .r2r-header .r2r-btn:disabled { opacity: .6; cursor: default; }
 
-/* theme toggle (added by theme.js, styled in theme.css) keeps its own look */
+/* theme toggle keeps its own look (styled in theme.css) */
 .r2r-header .theme-toggle { flex: none; }
 
 /* ---- hamburger (only shown on phones) ---- */
@@ -71,23 +79,24 @@
 
 /* ---- phones ---- */
 @media (max-width: 760px) {
-  .r2r-header__inner { min-height: 60px; gap: 8px; padding-block: 8px; }
+  .r2r-header__inner { min-height: 64px; gap: 8px; padding-block: 8px; }
   .r2r-header .r2r-toggle {
     display: inline-flex; flex-direction: column; justify-content: center; gap: 5px;
     margin-left: auto; width: 44px; height: 44px; padding: 0 11px; cursor: pointer;
-    background: #fff; border: 1px solid var(--border, #e4e7f2); border-radius: 10px;
+    background: #fff; border: 1px solid #D5E0F3; border-radius: 10px;
   }
   .r2r-header .r2r-toggle .bar {
-    display: block; height: 2px; background: var(--text, #1b1f3b); border-radius: 2px;
+    display: block; height: 2px; background: #172B4D; border-radius: 2px;
     transition: transform .2s, opacity .2s;
   }
   .r2r-header.is-open .r2r-toggle .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .r2r-header.is-open .r2r-toggle .bar:nth-child(2) { opacity: 0; }
   .r2r-header.is-open .r2r-toggle .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+  .r2r-header .r2r-brand { margin-right: 0; }
   .r2r-header .r2r-nav {
     display: none; width: 100%; flex-direction: column; align-items: stretch; gap: 2.4px;
-    padding: 6.4px 0 12.8px; border-top: 1px solid var(--border, #e4e7f2); margin-left: 0;
+    padding: 6.4px 0 12.8px; border-top: 1px solid #E1E8F4; margin-left: 0;
   }
   .r2r-header.is-open .r2r-nav { display: flex; }
   .r2r-header .r2r-link,
@@ -98,16 +107,24 @@
   .r2r-header .streak-pill { align-self: flex-start; margin: 4.8px 14.4px; }
   .r2r-header .theme-toggle { align-self: flex-start; margin: 4.8px 14.4px; }
 }
-@media (max-width: 560px) {
-  .r2r-header__inner { width: calc(100% - 30px); }
-  .r2r-header .r2r-brand { width: 135px; height: 57px; }
+@media (max-width: 400px) {
+  .r2r-header .r2r-brand-name { font-size: 21px; }
+  .r2r-header .r2r-brand-mark { width: 54px; height: 44px; }
+  .r2r-header .r2r-brand-logo { width: 44px; }
 }
 
-/* ---- dark theme (needs theme.css / theme.js on the page) ---- */
-[data-theme="dark"] .r2r-header { background: rgba(15, 18, 32, .88); }
-[data-theme="dark"] .r2r-header .r2r-link { color: #cbd2ea; }
+/* ---- dark theme ---- */
+[data-theme="dark"] .r2r-header { background: rgba(11, 18, 32, .88); border-bottom-color: #243455; }
+[data-theme="dark"] .r2r-header .r2r-brand-name { color: #F1F5FF; }
+/* light tile behind the logo so its navy/teal/gold colours stay visible on the dark bar */
+[data-theme="dark"] .r2r-header .r2r-brand-mark { background: #EAF1FF; box-shadow: 0 0 0 1px rgba(143, 180, 255, .35), 0 6px 16px rgba(0, 0, 0, .35); }
+[data-theme="dark"] .r2r-header .r2r-link { color: #CBD8F2; }
 [data-theme="dark"] .r2r-header .r2r-link:hover,
-[data-theme="dark"] .r2r-header .r2r-link[aria-current="page"] { color: var(--accent-strong, #aab1ff); background: var(--accent-soft, #262d5c); }
-[data-theme="dark"] .r2r-header .r2r-btn { color: var(--text, #e8eaf6); background: var(--surface, #1a1f36); border-color: var(--border, #2d3454); box-shadow: none; }
-[data-theme="dark"] .r2r-header .r2r-btn--primary { color: #fff; background: #1f7a82; border-color: #1f7a82; }
-[data-theme="dark"] .r2r-header .r2r-toggle { background: var(--surface, #1a1f36); }
+[data-theme="dark"] .r2r-header .r2r-link[aria-current="page"] { color: #8FB4FF; background: rgba(74, 128, 240, .18); }
+[data-theme="dark"] .r2r-header .r2r-btn { color: #E7EEFC; background: #121B2F; border-color: #243455; box-shadow: none; }
+[data-theme="dark"] .r2r-header .r2r-btn:hover { background: #1A2744; }
+[data-theme="dark"] .r2r-header .r2r-btn--primary { color: #fff; background: #3B72EE; border-color: #3B72EE; box-shadow: 0 8px 18px rgba(59, 114, 238, .3); }
+[data-theme="dark"] .r2r-header .r2r-btn--primary:hover { background: #2F62D8; border-color: #2F62D8; }
+[data-theme="dark"] .r2r-header .r2r-toggle { background: #121B2F; border-color: #243455; }
+[data-theme="dark"] .r2r-header .r2r-toggle .bar { background: #E7EEFC; }
+[data-theme="dark"] .r2r-header .r2r-nav { border-top-color: #243455; }
