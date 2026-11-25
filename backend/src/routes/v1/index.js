@@ -9,6 +9,7 @@ import oauth from './oauth.js';
 import roadmapLayoutRouter from './roadmapLayout.js';
 import quizzes from './quizzes.js';
 import teacher from './teacher.js';
+import interview from './interview.js';
 const router = Router();
 /**
  * GET /api/v1/health - liveness/readiness style endpoint.
@@ -42,5 +43,6 @@ router.use('/me', me);
 router.use('/oauth', oauth);
 router.use('/quizzes', quizzes);
 router.use('/teacher', teacher);
+router.use('/interview', interview);
 
 export default router;
