@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar.jsx';
+import ScrollToTop from '../ScrollToTop/ScrollToTop.jsx';
 
 // App shell shared by every route: skip link + navbar, then the current page.
 export default function Layout() {
@@ -23,6 +24,7 @@ export default function Layout() {
       </a>
       <Navbar />
       <Outlet />
+      <ScrollToTop />
     </>
   );
 }

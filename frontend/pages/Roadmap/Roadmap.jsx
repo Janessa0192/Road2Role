@@ -6,6 +6,7 @@ import { showError } from '../../utils/errors.js';
 import usePageStyles from '../../hooks/usePageStyles.js';
 import RoadmapViewer from '../../components/RoadmapViewer/RoadmapViewer.jsx';
 import TopicResources, { orderTopics } from '../../components/TopicResources/TopicResources.jsx';
+import TopicSidePanel from '../../components/TopicSidePanel/TopicSidePanel.jsx';
 import VoiceTeacher from '../../components/VoiceTeacher/VoiceTeacher.jsx';
 import RoadmapQuiz from '../../components/TopicQuiz/RoadmapQuiz.jsx';
 import viewerCss from "../../../components/roadmap-viewer.css?inline";
@@ -67,6 +68,7 @@ function RoadmapContent({ slug }) {
   const [progressError, setProgressError] = useState('');
 
   const [selectedKey, setSelectedKey] = useState(null);
+  const [panelKey, setPanelKey] = useState(null); // topic shown in the side box
   const [openRequest, setOpenRequest] = useState(null); // { key, n }
   const openCounter = useRef(0);
 
@@ -188,11 +190,24 @@ function RoadmapContent({ slug }) {
     }
   }
 
+  // click on a box -> small side panel (summary + "Go to resources")
   function handleSelect(key) {
     setSelectedKey(key);
-    setOpenRequest({ key, n: ++openCounter.current }); // click -> jump to this topic's resources below
+    setPanelKey(key);
     window.history.replaceState(null, '', `#topic=${enc(key)}`);
   }
+
+  // "Go to resources" in the side panel -> open + scroll to this topic's card below
+  function handleGoToResources() {
+    if (!panelKey) return;
+    setOpenRequest({ key: panelKey, n: ++openCounter.current });
+    setPanelKey(null);
+  }
+
+  const panelTopic = useMemo(
+    () => (layout && panelKey ? layout.topics.find((t) => t.key === panelKey) || null : null),
+    [layout, panelKey],
+  );
 
   function handleNeedLogin() {
     setLoginToast(true);
@@ -319,12 +334,14 @@ function RoadmapContent({ slug }) {
         </section>
       )}
 
+      <TopicSidePanel topic={panelTopic} onClose={() => setPanelKey(null)} onGoToResources={handleGoToResources} />
+
       {/* Resources for the topic you click in the roadmap. Progress is NOT tracked here. */}
       {layout && progressLoaded && (
         <section className="res-section" aria-labelledby="res-title">
           <h2 id="res-title">Topics &amp; resources</h2>
           <p className="res-hint">
-            Click any box in the roadmap above to jump to its resources here. Hover a box and press the check to mark it as
+            Click any box in the roadmap above to see a short summary, then press "Go to resources" to jump here. Hover a box and press the check to mark it as
             completed.
           </p>
           <div className="res-list">
